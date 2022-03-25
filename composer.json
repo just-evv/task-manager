@@ -1,5 +1,5 @@
 {
-    "name": "laravel/laravel",
+    "name": "hexlet/code",
     "type": "project",
     "description": "The Laravel Framework.",
     "keywords": ["framework", "laravel"],
@@ -9,7 +9,8 @@
         "guzzlehttp/guzzle": "^7.2",
         "laravel/framework": "^9.2",
         "laravel/sanctum": "^2.14.1",
-        "laravel/tinker": "^2.7"
+        "laravel/tinker": "^2.7",
+        "squizlabs/php_codesniffer": "*"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
@@ -44,7 +45,9 @@
         ],
         "post-create-project-cmd": [
             "@php artisan key:generate --ansi"
-        ]
+        ],
+        "phpcs": "phpcs",
+        "phpcbf": "phpcbf"
     },
     "extra": {
         "laravel": {
