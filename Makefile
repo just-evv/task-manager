@@ -29,14 +29,11 @@ deploy:
 docker-migrate:
 	docker-compose exec -T laravel.test php artisan migrate
 
-test:
+docker-test:
 	docker-compose exec -T laravel.test php artisan test
 
-test-coverage:
-	docker-compose exec -T laravel.test php artisan test --coverage-clover coverage.xml
-
-sail-test:
+test:
 	./vendor/bin/sail test
 
-sail-test-coverage:
+test-coverage:
 	./vendor/bin/sail test --coverage-clover coverage.xml
