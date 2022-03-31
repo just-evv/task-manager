@@ -4,8 +4,9 @@ start:
 setup:
 	composer install
 	cp -n .env.example .env|| true
-	php artisan key:gen --ansi
-	php artisan migrate
+	./vendor/bin/sail up -d
+	./vendor/bin/sail artisan key:gen --ansi
+	./vendor/bin/sail artisan migrate
 	npm install
 
 docker-setup:
@@ -28,8 +29,11 @@ deploy:
 docker-migrate:
 	docker-compose exec -T laravel.test php artisan migrate
 
-test:
+docker-test:
 	docker-compose exec -T laravel.test php artisan test
 
+test:
+	./vendor/bin/sail test
+
 test-coverage:
-	docker-compose exec -T laravel.test php artisan test --coverage-clover coverage.xml
+	./vendor/bin/sail test --coverage-clover coverage.xml
