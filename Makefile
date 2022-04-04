@@ -4,9 +4,9 @@ start:
 setup:
 	composer install
 	cp -n .env.example .env|| true
-	./vendor/bin/sail up -d
+
 	./vendor/bin/sail artisan key:gen --ansi
-	./vendor/bin/sail artisan migrate
+
 	npm install
 
 docker-setup:
