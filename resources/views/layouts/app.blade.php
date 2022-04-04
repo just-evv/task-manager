@@ -33,6 +33,18 @@
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav me-auto">
+                        <li class="nav-item">
+                            <a class="nav-link " href="{ route('') }">
+                                Задачи                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link " href="{ route('') }">
+                                Статусы                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link " href="{ route('') }">
+                                Метки                            </a>
+                        </li>
 
                     </ul>
 
@@ -75,7 +87,7 @@
             </div>
         </nav>
 
-        <main class="py-4">
+        <main class="container py-4">
             @yield('content')
         </main>
     </div>
