@@ -36,4 +36,4 @@ test:
 	./vendor/bin/sail test
 
 test-coverage:
-	./vendor/bin/sail test --coverage-clover coverage.xml
+	php artisan test --coverage-clover coverage.xml
