@@ -5,7 +5,7 @@ setup:
 	composer install
 	cp -n .env.example .env|| true
 
-	./vendor/bin/sail artisan key:gen --ansi
+	php artisan key:gen --ansi
 
 	npm install
 
