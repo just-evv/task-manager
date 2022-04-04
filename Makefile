@@ -1,24 +1,11 @@
-start:
-	php artisan serve --host 127.0.0.1
+up:
+	./vendor/bin/sail up -d
 
-setup:
-	composer install
-	cp -n .env.example .env|| true
+down:
+	./vendor/bin/sail down
 
-	php artisan key:gen --ansi
-
-	npm install
-
-docker-setup:
-	docker run --rm -v $(PWD):/app composer/composer:latest install
-	cp -n .env.example .env|| true
-	php artisan key:gen --ansi
-	docker-compose up -d
-	docker-compose exec -T laravel.test php artisan migrate
-	npm install
-
-compose:
-	docker-compose up -d
+test:
+	./vendor/bin/sail test
 
 lint:
 	composer run-script phpcs -- --standard=PSR12 app tests
@@ -26,14 +13,11 @@ lint:
 deploy:
 	git push heroku main
 
-docker-migrate:
-	docker-compose exec -T laravel.test php artisan migrate
-
-docker-test:
-	docker-compose exec -T laravel.test php artisan test
-
-test:
-	./vendor/bin/sail test
+setup:
+	composer install
+	cp -n .env.example .env|| true
+	php artisan key:gen --ansi
+	npm install
 
 test-coverage:
 	php artisan test --coverage-clover coverage.xml
