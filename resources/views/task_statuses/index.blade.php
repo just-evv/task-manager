@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+    @include('flash::message')
     <h1 class="mb-5">Statuses</h1>
     @can('create-task_status')
     <a href="{{ route('task_statuses.create') }}" class="btn btn-primary">Create new status</a>
