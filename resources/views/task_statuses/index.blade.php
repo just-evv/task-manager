@@ -23,7 +23,15 @@
             <td>{{$status->name}}</td>
             <td>{{$status->created_at}}</td>
             @canany(['update-task_status', 'delete-task_status'], $status)
-            <td><a class="text-decoration-none" href="{{ route('task_statuses.edit', $status) }}">Update</a> <a class="text-danger text-decoration-none" href="{{ route('task_statuses.destroy', $status) }}">Delete</a>
+            <td>
+                <a class="text-decoration-none" href="{{ route('task_statuses.edit', $status) }}">Update</a>
+                <a class="text-danger text-decoration-none"
+                   href="{{ route('task_statuses.destroy', $status) }}"
+                   data-confirm="Are you sure?"
+                   data-method="delete"
+                   rel="nofollow">
+                    Delete
+                </a>
             </td>
             @endcanany
 
