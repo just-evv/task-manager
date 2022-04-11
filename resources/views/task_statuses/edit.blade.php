@@ -2,7 +2,7 @@
 
 @section('content')
 
-    <h1 class="mb-5">Create status</h1>
+    <h1 class="mb-5">Update status</h1>
 
     @if ($errors->any())
         <div>
@@ -14,11 +14,11 @@
         </div>
     @endif
 
-{{ Form::model($taskStatus, ['route' => 'task_statuses.store']) }}
-{{ Form::label('name', 'Name') }}
-{{ Form::text('name') }}<br>
+    {{ Form::model($status, ['route' => ['task_statuses.update', $status], 'method' => 'PATCH']) }}
+    {{ Form::label('name', 'Name') }}
+    {{ Form::text('name') }}<br>
 
-{{ Form::submit('Create') }}
-{{ Form::close() }}
+    {{ Form::submit('Update') }}
+    {{ Form::close() }}
 
 @endsection

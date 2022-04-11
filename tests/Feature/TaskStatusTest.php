@@ -8,5 +8,4 @@ use Tests\TestCase;
 
 class TaskStatusTest extends TestCase
 {
-
 }

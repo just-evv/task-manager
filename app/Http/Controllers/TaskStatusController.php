@@ -39,7 +39,7 @@ class TaskStatusController extends Controller
     public function store(Request $request)
     {
         $data = $this->validate($request, [
-            'name' => 'required'
+            'name' => 'required|unique:task_statuses'
         ]);
 
         $newStatus = new TaskStatus($data);
@@ -67,7 +67,8 @@ class TaskStatusController extends Controller
      */
     public function edit(TaskStatus $taskStatus)
     {
-        //
+        $status = TaskStatus::findOrFail($taskStatus->id);
+        return view('task_statuses.edit', compact('status'));
     }
 
     /**
@@ -79,7 +80,16 @@ class TaskStatusController extends Controller
      */
     public function update(Request $request, TaskStatus $taskStatus)
     {
-        //
+        $status = TaskStatus::findOrFail($taskStatus->id);
+        $data = $this->validate($request, [
+
+            'name' => 'required|unique:task_statuses,name,' . $status->id,
+        ]);
+
+        $status->fill($data);
+        $status->save();
+        return redirect()
+            ->route('task_statuses.index');
     }
 
     /**
