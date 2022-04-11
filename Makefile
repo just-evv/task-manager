@@ -17,7 +17,6 @@ setup:
 	composer install
 	cp -n .env.example .env|| true
 	php artisan key:gen --ansi
-	php artisan db:seed
 	npm install
 
 test-coverage:
