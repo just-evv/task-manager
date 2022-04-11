@@ -2,14 +2,18 @@
 
 @section('content')
     <h1 class="mb-5">Statuses</h1>
+    @can('create-task_status')
     <a href="{{ route('task_statuses.create') }}" class="btn btn-primary">Create new status</a>
+    @endcan
     <table class="table me-2">
         <thead>
         <tr>
             <th>ID</th>
             <th>Name</th>
             <th>Created</th>
+            @canany(['update-task_status', 'delete-task_status'], $statuses)
             <th>Action</th>
+            @endcanany
         </tr>
         </thead>
         @foreach($statuses as $status)
@@ -18,7 +22,10 @@
             <td>{{$status->id}}</td>
             <td>{{$status->name}}</td>
             <td>{{$status->created_at}}</td>
-            <td></td>
+            @canany(['update-task_status', 'delete-task_status'], $status)
+            <td><a class="text-decoration-none" href="{{ route('task_statuses.edit', $status->id) }}">Update</a> <a class="text-danger text-decoration-none" href="{{ route('task_statuses.destroy', $status->id) }}">Delete</a>
+            </td>
+            @endcanany
 
         </tr>
         @endforeach

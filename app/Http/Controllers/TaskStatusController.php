@@ -25,18 +25,27 @@ class TaskStatusController extends Controller
      */
     public function create()
     {
-        //
+        $taskStatus = new TaskStatus();
+        return view('task_statuses.create', compact('taskStatus'));
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
+     * @throws \Illuminate\Validation\ValidationException
      */
     public function store(Request $request)
     {
-        //
+        $data = $this->validate($request, [
+            'name' => 'required'
+        ]);
+
+        $newStatus = new TaskStatus($data);
+        $newStatus->save();
+
+        return redirect()->route('task_statuses.index');
     }
 
     /**
