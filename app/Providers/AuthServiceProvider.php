@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Models\TaskStatus;
+use App\Models\User;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 
@@ -24,6 +26,16 @@ class AuthServiceProvider extends ServiceProvider
     public function boot()
     {
         $this->registerPolicies();
+
+        Gate::define('create-task_status', function (User $user) {
+            return true;
+        });
+        Gate::define('update-task_status', function (User $user) {
+            return true;
+        });
+        Gate::define('delete-task_status', function (User $user) {
+            return true;
+        });
 
         //
     }
