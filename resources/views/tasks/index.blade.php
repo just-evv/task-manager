@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <h1 class="mb-5">Задачи</h1>
+    <h1 class="mb-5">Tasks</h1>
     <div class="d-flex mb-3">
         <div>
                 <!-- Form -->
@@ -12,11 +12,11 @@
         <thead>
         <tr>
             <th>ID</th>
-            <th>Статус</th>
-            <th>Имя</th>
-            <th>Автор</th>
-            <th>Исполнитель</th>
-            <th>Дата создания</th>
+            <th>Status</th>
+            <th>Name</th>
+            <th>Created by</th>
+            <th>Assigned to</th>
+            <th>Created at</th>
         </tr>
         </thead>
         <tr>

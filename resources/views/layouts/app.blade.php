@@ -35,7 +35,7 @@
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav me-auto">
                         <li class="nav-item">
-                            <a class="nav-link " href="{{ route('tasks') }}">
+                            <a class="nav-link " href="{{ route('tasks.index') }}">
                                 Задачи                            </a>
                         </li>
                         <li class="nav-item">
