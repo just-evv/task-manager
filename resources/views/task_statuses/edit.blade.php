@@ -13,12 +13,14 @@
             </ul>
         </div>
     @endif
-
+    <div class="form-group">
     {{ Form::model($status, ['route' => ['task_statuses.update', $status], 'method' => 'PATCH']) }}
+        <div class="form-group mb-3">
     {{ Form::label('name', 'Name') }}
-    {{ Form::text('name') }}<br>
-
-    {{ Form::submit('Update') }}
+    <br>
+    {{ Form::text('name', $value = null , ['class' => 'form-control']) }}
+        </div>
+    {{ Form::submit('Update', ['class' => 'btn btn-primary mt-3']) }}
     {{ Form::close() }}
-
+    </div>
 @endsection

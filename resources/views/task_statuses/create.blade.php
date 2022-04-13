@@ -15,10 +15,12 @@
     @endif
 
 {{ Form::model($taskStatus, ['route' => 'task_statuses.store']) }}
-{{ Form::label('name', 'Name') }}
-{{ Form::text('name') }}<br>
-
-{{ Form::submit('Create') }}
+    <div class="form-group mb-3">
+        {{ Form::label('name', 'Name') }}
+        <br>
+        {{ Form::text('name', $value = null , ['class' => 'form-control']) }}
+    </div>
+{{ Form::submit('Create',  ['class' => 'btn btn-primary mt-3']) }}
 {{ Form::close() }}
 
 @endsection
