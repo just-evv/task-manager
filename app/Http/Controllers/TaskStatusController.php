@@ -45,20 +45,9 @@ class TaskStatusController extends Controller
         $newStatus = new TaskStatus($data);
         $newStatus->save();
 
-        flash('Task status added successfully');
+        flash(__('messages.created', ['name' => 'task status']));
 
         return redirect()->route('task_statuses.index');
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\TaskStatus  $taskStatus
-     * @return \Illuminate\Http\Response
-     */
-    public function show(TaskStatus $taskStatus)
-    {
-        //
     }
 
     /**
@@ -91,7 +80,7 @@ class TaskStatusController extends Controller
         $status->fill($data);
         $status->save();
 
-        flash('Task status updated successfully!');
+        flash(__('messages.updated', ['name' => 'task status']));
 
         return redirect()
             ->route('task_statuses.index');
@@ -110,7 +99,7 @@ class TaskStatusController extends Controller
             $status->delete();
         }
 
-        flash('Task status deleted')->warning();
+        flash(__('messages.deleted', ['name' => 'task status']))->warning();
         return redirect()->route('task_statuses.index');
     }
 }
