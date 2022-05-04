@@ -17,4 +17,12 @@ class TaskStatus extends Model
     protected $fillable = [
         'name'
     ];
+
+    /**
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function tasks()
+    {
+        return $this->belongsToMany(Task::class, 'status_id');
+    }
 }
