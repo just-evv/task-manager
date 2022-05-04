@@ -3,6 +3,9 @@
 @section('content')
     <h1 class="mb-5">Tasks</h1>
     <div class="d-flex mb-3">
+        @can('create-task')
+            <a href="{{ route('tasks.create') }}" class="btn btn-primary">Create new task</a>
+        @endcan
         <div>
                 <!-- Form -->
         </div>

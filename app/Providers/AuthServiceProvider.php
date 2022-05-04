@@ -37,6 +37,16 @@ class AuthServiceProvider extends ServiceProvider
             return true;
         });
 
+        Gate::define('create-task', function (User $user) {
+            return true;
+        });
+        Gate::define('edit-task', function (User $user) {
+            return true;
+        });
+        Gate::define('delete-task', function (User $user) {
+            return true;
+        });
+
         //
     }
 }
