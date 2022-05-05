@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('description')->nullable();
             $table->bigInteger('status_id');
             $table->bigInteger('created_by_id');
-            $table->bigInteger('assigned_by_id')->nullable();
+            $table->bigInteger('assigned_to_id')->nullable();
             $table->timestamp('updated_at')->useCurrent();
             $table->timestamp('created_at')->useCurrent();
         });
