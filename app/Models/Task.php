@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Task extends Model
 {
@@ -17,29 +18,29 @@ class Task extends Model
     protected $fillable = [
         'name',
         'description',
-        'status_id',
-        'assigned_to_id',
-        'created_by_id'
     ];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
-    public function user()
+    public function creator(): BelongsTo
     {
         return $this->belongsTo(User::class, 'created_by_id');
     }
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     * @return BelongsTo
      */
-    public function assignedUser()
+    public function assignedUser(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'created_by_id');
+        return $this->belongsTo(User::class, 'assigned_to_id');
     }
 
-    public function status()
+    /**
+     * @return BelongsTo
+     */
+    public function status(): BelongsTo
     {
-        return $this->hasOne(TaskStatus::class, 'status_id');
+        return $this->belongsTo(TaskStatus::class, 'status_id');
     }
 }

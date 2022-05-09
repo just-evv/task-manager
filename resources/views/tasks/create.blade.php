@@ -26,7 +26,7 @@
         <br>
         {{ Form::label('status_id', 'Status') }}
         <br>
-        {{ Form::select('status_id', $statuses, null, ['class' => 'form-control', 'placeholder' => '----------']) }}
+        {{ Form::select('status_id', $statuses, null, ['class' => 'form-control']) }}
         <br>
         {{ Form::label('assigned_to', 'Assigned to') }}
         <br>

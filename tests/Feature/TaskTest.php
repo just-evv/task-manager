@@ -41,10 +41,12 @@ class TaskTest extends TestCase
 
     public function testStoreStatus()
     {
+        $assignedUser = User::factory()->create();
         $newTask = [
             'name' => 'task',
             'description' => 'description',
             'status_id' => $this->taskStatus->id,
+            'assigned_to_id' => $assignedUser->id,
         ];
         $this->actingAs($this->user)
             ->post(route('tasks.store', $newTask))

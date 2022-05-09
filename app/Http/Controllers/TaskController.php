@@ -10,6 +10,7 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 
@@ -52,19 +53,23 @@ class TaskController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        $userID = Auth::id();
-
         $data = $this->validate($request, [
             'name' => 'required|unique:tasks',
             'description' => 'nullable|max:255',
             'status_id' => 'required',
-            'assigned_to_id' => 'nullable|integer'
+            'assigned_to_id' => 'nullable'
         ]);
 
-        $data['created_by_id'] = $userID;
+        $userId = Auth::id();
+        $user = User::find($userId);
+        $status = TaskStatus::find($data['status_id']);
+        $assignedUser = User::find($data['assigned_to_id']);
 
         $newTask = new Task($data);
 
+        $newTask->creator()->associate($user);
+        $newTask->status()->associate($status);
+        $newTask->assignedUser()->associate($assignedUser);
         $newTask->save();
 
         flash(__('messages.created', ['name' => 'task']));
@@ -76,7 +81,7 @@ class TaskController extends Controller
      * Display the specified resource.
      *
      * @param  \App\Models\Task  $task
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function show(Task $task)
     {
@@ -87,7 +92,7 @@ class TaskController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  \App\Models\Task  $task
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function edit(Task $task)
     {
@@ -99,7 +104,7 @@ class TaskController extends Controller
      *
      * @param Request $request
      * @param  \App\Models\Task  $task
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function update(Request $request, Task $task)
     {
@@ -110,7 +115,7 @@ class TaskController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  \App\Models\Task  $task
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy(Task $task)
     {

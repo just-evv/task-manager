@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class TaskStatus extends Model
 {
@@ -19,10 +20,10 @@ class TaskStatus extends Model
     ];
 
     /**
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     * @return HasMany
      */
-    public function tasks()
+    public function tasks(): HasMany
     {
-        return $this->belongsToMany(Task::class, 'status_id');
+        return $this->hasMany(Task::class);
     }
 }
