@@ -79,4 +79,13 @@ class TaskTest extends TestCase
         $updatedTask = DB::table('tasks')->find($task->id);
         $this->assertEquals($request['name'], $updatedTask->name);
     }
+
+    public function testDeleteTask()
+    {
+        $task = Task::factory()->create();
+        $this->assertModelExists($task);
+        $this->delete(route('tasks.destroy', $task))
+            ->assertRedirect(route('tasks.index'));
+        $this->assertModelMissing($task);
+    }
 }

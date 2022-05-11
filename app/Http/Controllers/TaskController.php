@@ -81,9 +81,9 @@ class TaskController extends Controller
      * Display the specified resource.
      *
      * @param Task $task
-     * @return Response
+     * @return Application|Factory|View
      */
-    public function show(Task $task)
+    public function show(Task $task): View|Factory|Application
     {
         $task = Task::findOrFail($task->id);
         return view('tasks.show', compact('task'));
@@ -116,9 +116,9 @@ class TaskController extends Controller
      */
     public function update(Request $request, Task $task): RedirectResponse
     {
-        $status = TaskStatus::findOrFail($task->id);
+        $task = Task::findOrFail($task->id);
         $data = $this->validate($request, [
-            'name' => 'required|unique:tasks,name,' . $status->id,
+            'name' => 'required|unique:tasks,name,' . $task->id,
             'description' => 'nullable|max:255',
             'status_id' => 'required',
             'assigned_to_id' => 'nullable'
@@ -141,10 +141,13 @@ class TaskController extends Controller
      * Remove the specified resource from storage.
      *
      * @param Task $task
-     * @return Response
+     * @return RedirectResponse
      */
-    public function destroy(Task $task)
+    public function destroy(Task $task): RedirectResponse
     {
-        //
+        $task = Task::findOrFail($task->id);
+        $task->delete();
+        flash(__('messages.deleted', ['name' => 'task']));
+        return redirect()->route('tasks.index');
     }
 }
