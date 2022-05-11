@@ -80,7 +80,7 @@ class TaskController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Task  $task
+     * @param Task $task
      * @return Response
      */
     public function show(Task $task)
@@ -91,30 +91,55 @@ class TaskController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Task  $task
-     * @return Response
+     * @param Task $task
+     * @return Application|Factory|View
      */
-    public function edit(Task $task)
+    public function edit(Task $task): View|Factory|Application
     {
-        return view('tasks.edit');
+        $task = Task::findOrFail($task->id);
+        $statuses = TaskStatus::all()->mapWithKeys(function ($item) {
+            return [$item['id'] => $item['name']];
+        })->all();
+        $allUsers = User::all()->mapWithKeys(function ($item) {
+            return [$item['id'] => $item['name']];
+        })->all();
+        return view('tasks.edit', compact(['task', 'statuses', 'allUsers']));
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param Request $request
-     * @param  \App\Models\Task  $task
-     * @return Response
+     * @param Task $task
+     * @return RedirectResponse
      */
-    public function update(Request $request, Task $task)
+    public function update(Request $request, Task $task): RedirectResponse
     {
-        //
+        $status = TaskStatus::findOrFail($task->id);
+        $data = $this->validate($request, [
+            'name' => 'required|unique:tasks,name,' . $status->id,
+            'description' => 'nullable|max:255',
+            'status_id' => 'required',
+            'assigned_to_id' => 'nullable'
+        ]);
+
+        $task->fill($data);
+        $status = TaskStatus::find($data['status_id']);
+        $assignedUser = User::find($data['assigned_to_id']);
+        $task->status()->associate($status);
+        $task->assignedUser()->associate($assignedUser);
+
+        $task->save();
+
+        flash(__('messages.updated', ['name' => 'task']));
+
+        return redirect()->route('tasks.index');
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Task  $task
+     * @param Task $task
      * @return Response
      */
     public function destroy(Task $task)

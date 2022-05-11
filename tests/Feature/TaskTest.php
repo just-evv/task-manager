@@ -2,10 +2,12 @@
 
 namespace Tests\Feature;
 
+use App\Models\Task;
 use App\Models\TaskStatus;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
 class TaskTest extends TestCase
@@ -33,13 +35,13 @@ class TaskTest extends TestCase
             ->assertSee('Create new task');
     }
 
-    public function testCreateStatus()
+    public function testCreateTask()
     {
         $this->get(route('tasks.create'))
             ->assertOk();
     }
 
-    public function testStoreStatus()
+    public function testStoreTask()
     {
         $assignedUser = User::factory()->create();
         $newTask = [
@@ -51,8 +53,23 @@ class TaskTest extends TestCase
         $this->actingAs($this->user)
             ->post(route('tasks.store', $newTask))
             ->assertRedirect(route('tasks.index'));
-        //$this->get(route('tasks.index'))
-        //    ->assertSee($newTask);
+        $this->get(route('tasks.index'))
+            ->assertSee($newTask['name']);
         $this->assertDatabaseHas('tasks', $newTask);
+    }
+
+    public function testUpdateTask()
+    {
+        $task = Task::factory()->create();
+        $request = ['name' => 'new task',
+            'description' => '',
+            'status_id' => $task->status->id,
+            'assigned_to_id' => $this->user->id
+            ];
+        $this->patch(route('tasks.update', $task), $request)
+            ->assertRedirect(route('tasks.index'))
+            ->assertSessionDoesntHaveErrors();
+        $updatedTask = DB::table('tasks')->find($task->id);
+        $this->assertEquals($request['name'], $updatedTask->name);
     }
 }
