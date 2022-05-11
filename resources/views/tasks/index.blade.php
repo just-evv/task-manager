@@ -29,14 +29,25 @@
         @foreach ($tasks as $task)
             <tr>
                 <td>{{ $task->id }}</td>
-                <td>{{ $task->status->name }}</td>
+                <td>
+                    <a class="text-decoration-none" href="{{ route('tasks.show', $task) }}">
+                    {{ $task->status->name }}
+                    </a>
+                </td>
                 <td>{{ $task->name }}</td>
                 <td>{{ $task->creator->name }}</td>
                 <td>{{ $task->assignedUser->name ?? ''}}</td>
                 <td>{{ $task->created_at->toDateString() }}</td>
-                @canany(['edit-task'], $task)
+                @canany(['edit-task', 'delete-task'], $task)
                     <td>
                         <a class="text-decoration-none" href="{{ route('tasks.edit', $task) }}">Edit</a>
+                        <a class="text-danger text-decoration-none"
+                           href="{{ route('tasks.destroy', $task) }}"
+                           data-confirm="Are you sure?"
+                           data-method="delete"
+                           rel="nofollow">
+                            Delete
+                        </a>
                     </td>
                 @endcanany
             </tr>

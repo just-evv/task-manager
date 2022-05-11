@@ -58,6 +58,13 @@ class TaskTest extends TestCase
         $this->assertDatabaseHas('tasks', $newTask);
     }
 
+    public function testShowTask()
+    {
+        $task = Task::factory()->create();
+        $this->get(route('tasks.show', $task))
+            ->assertSee([$task->name, $task->description, $task->status->name]);
+    }
+
     public function testUpdateTask()
     {
         $task = Task::factory()->create();
