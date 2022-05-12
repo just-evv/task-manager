@@ -7,6 +7,7 @@ use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class LabelController extends Controller
 {
@@ -24,18 +25,19 @@ class LabelController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Application|Factory|View
      */
-    public function create()
+    public function create(): Application|Factory|View
     {
-        //
+        $label = new Label();
+        return view('labels.create', compact('label'));
     }
 
     /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function store(Request $request)
     {
@@ -43,33 +45,23 @@ class LabelController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Label  $label
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Label $label)
-    {
-        //
-    }
-
-    /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Label  $label
-     * @return \Illuminate\Http\Response
+     * @param Label $label
+     * @return Application|Factory|View
      */
-    public function edit(Label $label)
+    public function edit(Label $label): Application|Factory|View
     {
-        //
+        $label = Label::findOrFail($label->id);
+        return view('labels.edit', compact('label'));
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Label  $label
-     * @return \Illuminate\Http\Response
+     * @param Label $label
+     * @return Response
      */
     public function update(Request $request, Label $label)
     {
@@ -79,8 +71,8 @@ class LabelController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Label  $label
-     * @return \Illuminate\Http\Response
+     * @param Label $label
+     * @return Response
      */
     public function destroy(Label $label)
     {

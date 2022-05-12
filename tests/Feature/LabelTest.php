@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Label;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -22,5 +23,19 @@ class LabelTest extends TestCase
         $this->actingAs($this->user)
             ->get(route('labels.index'))
             ->assertSee(['Create', 'Action']);
+    }
+
+    public function testCreateLabel()
+    {
+        $this->get(route('labels.create'))
+            ->assertOk();
+    }
+
+    public function testEditLabel()
+    {
+        $label = Label::factory()->create();
+        $this->get(route('labels.edit', $label))
+            ->assertOk()
+            ->assertSee('form');
     }
 }
