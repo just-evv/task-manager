@@ -3,16 +3,22 @@
 namespace App\Http\Controllers;
 
 use App\Models\TaskStatus;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Validation\ValidationException;
 
 class TaskStatusController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Application|Factory|View
      */
-    public function index()
+    public function index(): View|Factory|Application
     {
         $statuses = TaskStatus::paginate();
         return view('task_statuses.index', compact('statuses'));
@@ -21,9 +27,9 @@ class TaskStatusController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Application|Factory|View
      */
-    public function create()
+    public function create(): View|Factory|Application
     {
         $taskStatus = new TaskStatus();
         return view('task_statuses.create', compact('taskStatus'));
@@ -32,11 +38,11 @@ class TaskStatusController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
-     * @throws \Illuminate\Validation\ValidationException
+     * @param Request $request
+     * @return RedirectResponse
+     * @throws ValidationException
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
         $data = $this->validate($request, [
             'name' => 'required|unique:task_statuses'
@@ -53,10 +59,10 @@ class TaskStatusController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\TaskStatus  $taskStatus
-     * @return \Illuminate\Http\Response
+     * @param TaskStatus $taskStatus
+     * @return Application|Factory|View
      */
-    public function edit(TaskStatus $taskStatus)
+    public function edit(TaskStatus $taskStatus): View|Factory|Application
     {
         $status = TaskStatus::findOrFail($taskStatus->id);
         return view('task_statuses.edit', compact('status'));
@@ -65,11 +71,11 @@ class TaskStatusController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\TaskStatus  $taskStatus
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @param TaskStatus $taskStatus
+     * @return RedirectResponse
      */
-    public function update(Request $request, TaskStatus $taskStatus)
+    public function update(Request $request, TaskStatus $taskStatus): RedirectResponse
     {
         $status = TaskStatus::findOrFail($taskStatus->id);
         $data = $this->validate($request, [
@@ -82,24 +88,27 @@ class TaskStatusController extends Controller
 
         flash(__('messages.updated', ['name' => 'task status']));
 
-        return redirect()
-            ->route('task_statuses.index');
+        return redirect()->route('task_statuses.index');
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\TaskStatus  $taskStatus
-     * @return \Illuminate\Http\Response
+     * @param TaskStatus $taskStatus
+     * @return RedirectResponse
      */
-    public function destroy(TaskStatus $taskStatus)
+    public function destroy(TaskStatus $taskStatus): RedirectResponse
     {
         $status = TaskStatus::find($taskStatus->id);
-        if ($status) {
+        $tasks = $status->tasks()->get();
+
+        if ($tasks->isEmpty()) {
             $status->delete();
+            flash(__('messages.deleted', ['name' => 'task status']));
+            return redirect()->route('task_statuses.index');
         }
 
-        flash(__('messages.deleted', ['name' => 'task status']))->warning();
-        return redirect()->route('task_statuses.index');
+         flash(__('messages.unsuccessful', ['name' => 'task status']))->warning();
+         return redirect()->route('task_statuses.index');
     }
 }

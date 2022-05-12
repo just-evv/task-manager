@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Task;
 use App\Models\TaskStatus;
 use App\Models\User;
 use Illuminate\Support\Facades\DB;
@@ -40,19 +41,6 @@ class TaskStatusTest extends TestCase
         $this->assertDatabaseHas('task_statuses', $newStatus);
     }
 
-    public function testDeleteStatus()
-    {
-        $status = TaskStatus::factory()->create();
-        $this->assertModelExists($status);
-        $statusId = $status->id;
-        $this->assertDatabaseHas('task_statuses', ['id' => $statusId]);
-
-        $this->delete(route('task_statuses.destroy', $status))
-            ->assertredirect(route('task_statuses.index'));
-
-        $this->assertModelMissing($status);
-    }
-
     public function testEditStatus()
     {
         $status = TaskStatus::factory()->create();
@@ -70,5 +58,29 @@ class TaskStatusTest extends TestCase
             ->assertSessionDoesntHaveErrors();
         $updatedStatus = DB::table('task_statuses')->find($status->id);
         $this->assertEquals($request['name'], $updatedStatus->name);
+    }
+
+    public function testDeleteStatusNotAssigned()
+    {
+        $status = TaskStatus::factory()->create();
+        $this->assertModelExists($status);
+        $statusId = $status->id;
+        $this->assertDatabaseHas('task_statuses', ['id' => $statusId]);
+
+        $this->delete(route('task_statuses.destroy', $status))
+            ->assertredirect(route('task_statuses.index'));
+
+        $this->assertDatabaseMissing('task_statuses', ['id' => $statusId]);
+    }
+
+    public function testDeleteStatusAssigned()
+    {
+        $task = Task::factory()->create();
+        $status = $task->status;
+        $this->assertModelExists($status);
+
+        $this->delete(route('task_statuses.destroy', $status))
+            ->assertredirect(route('task_statuses.index'));
+        $this->assertModelExists($status);
     }
 }

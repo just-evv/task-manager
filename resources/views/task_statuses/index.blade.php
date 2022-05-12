@@ -20,9 +20,9 @@
         @foreach($statuses as $status)
         <tr>
 
-            <td>{{$status->id}}</td>
-            <td>{{$status->name}}</td>
-            <td>{{$status->created_at}}</td>
+            <td>{{ $status->id }}</td>
+            <td>{{ $status->name}}</td>
+            <td>{{ $status->created_at->toDateString() }}</td>
             @canany(['update-task_status', 'delete-task_status'], $status)
             <td>
                 <a class="text-decoration-none" href="{{ route('task_statuses.edit', $status) }}">Update</a>

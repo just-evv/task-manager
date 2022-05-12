@@ -1,8 +1,12 @@
 @extends('layouts.app')
 
 @section('content')
-    <h1 class="mb-5">Задачи</h1>
+    @include('flash::message')
+    <h1 class="mb-5">Tasks</h1>
     <div class="d-flex mb-3">
+        @can('create-task')
+            <a href="{{ route('tasks.create') }}" class="btn btn-primary">Create new task</a>
+        @endcan
         <div>
                 <!-- Form -->
         </div>
@@ -12,23 +16,42 @@
         <thead>
         <tr>
             <th>ID</th>
-            <th>Статус</th>
-            <th>Имя</th>
-            <th>Автор</th>
-            <th>Исполнитель</th>
-            <th>Дата создания</th>
+            <th>Status</th>
+            <th>Name</th>
+            <th>Created by</th>
+            <th>Assigned to</th>
+            <th>Created at</th>
+            @canany(['edit-task'], $tasks)
+                <th>Action</th>
+            @endcanany
         </tr>
         </thead>
-        <tr>
-            <td></td>
-            <td></td>
-            <td>
-                <a class="text-decoration-none" href=" { route('') } ">
-                </a>
-            </td>
-            <td></td>
-            <td></td>
-            <td></td>
-        </tr>
+        @foreach ($tasks as $task)
+            <tr>
+                <td>{{ $task->id }}</td>
+                <td>
+                    <a class="text-decoration-none" href="{{ route('tasks.show', $task) }}">
+                    {{ $task->status->name }}
+                    </a>
+                </td>
+                <td>{{ $task->name }}</td>
+                <td>{{ $task->creator->name }}</td>
+                <td>{{ $task->assignedUser->name ?? ''}}</td>
+                <td>{{ $task->created_at->toDateString() }}</td>
+                @canany(['edit-task', 'delete-task'], $task)
+                    <td>
+                        <a class="text-decoration-none" href="{{ route('tasks.edit', $task) }}">Edit</a>
+                        <a class="text-danger text-decoration-none"
+                           href="{{ route('tasks.destroy', $task) }}"
+                           data-confirm="Are you sure?"
+                           data-method="delete"
+                           rel="nofollow">
+                            Delete
+                        </a>
+                    </td>
+                @endcanany
+            </tr>
+        @endforeach
     </table>
+    {{ $tasks->links('pagination::bootstrap-4') }}
 @endsection

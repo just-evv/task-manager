@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\Task;
 use App\Models\TaskStatus;
 use App\Models\User;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
@@ -35,6 +36,16 @@ class AuthServiceProvider extends ServiceProvider
         });
         Gate::define('delete-task_status', function (User $user) {
             return true;
+        });
+
+        Gate::define('create-task', function (User $user) {
+            return true;
+        });
+        Gate::define('edit-task', function (User $user) {
+            return true;
+        });
+        Gate::define('delete-task', function (User $user, Task $task) {
+            return $user->id === $task->creator()->id;
         });
 
         //

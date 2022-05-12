@@ -1,6 +1,8 @@
 <?php
 
+use App\Http\Controllers\TaskController;
 use App\Http\Controllers\TaskStatusController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 
@@ -16,15 +18,13 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    Log::debug('Test debug message');
+    //Log::debug('Test debug message');
     return view('index');
 })->name('index');
 
-Route::get('tasks', function () {
-    return view('tasks.index');
-})->name('tasks');
-
 Route::resource('task_statuses', TaskStatusController::class)->except(['show']);
+
+Route::resource('tasks', TaskController::class);
 
 Auth::routes();
 
