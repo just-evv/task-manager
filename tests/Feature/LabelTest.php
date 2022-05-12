@@ -2,21 +2,25 @@
 
 namespace Tests\Feature;
 
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class LabelTest extends TestCase
 {
-    /**
-     * A basic feature test example.
-     *
-     * @return void
-     */
-    public function test_example()
-    {
-        $response = $this->get('/');
+    private object $user;
 
-        $response->assertStatus(200);
+    public function setUp(): void
+    {
+        parent::setUp();
+        $this->user = User::factory()->create();
+    }
+
+    public function testSeeAsUser()
+    {
+        $this->actingAs($this->user)
+            ->get(route('labels.index'))
+            ->assertSee(['Create', 'Action']);
     }
 }
