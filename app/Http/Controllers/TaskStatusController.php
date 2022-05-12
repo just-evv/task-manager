@@ -100,14 +100,15 @@ class TaskStatusController extends Controller
     public function destroy(TaskStatus $taskStatus): RedirectResponse
     {
         $status = TaskStatus::find($taskStatus->id);
-        $tasks = $status->tasks();
+        $tasks = $status->tasks()->get();
 
-        if (is_null($tasks)) {
+        if ($tasks->isEmpty()) {
             $status->delete();
             flash(__('messages.deleted', ['name' => 'task status']));
             return redirect()->route('task_statuses.index');
         }
-        flash(__('messages.unsuccessful', ['name' => 'task status']))->warning();
-        return redirect()->route('task_statuses.index');
+
+         flash(__('messages.unsuccessful', ['name' => 'task status']))->warning();
+         return redirect()->route('task_statuses.index');
     }
 }
