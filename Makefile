@@ -7,6 +7,9 @@ down:
 test:
 	./vendor/bin/sail test
 
+migrate:
+	./vendor/bin/sail artisan migrate
+
 lint:
 	composer run-script phpcs -- --standard=PSR12 app tests
 
