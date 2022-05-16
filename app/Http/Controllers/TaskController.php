@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Label;
 use App\Models\Task;
 use App\Models\TaskStatus;
 use App\Models\User;
@@ -10,7 +11,6 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 
@@ -35,14 +35,11 @@ class TaskController extends Controller
     public function create(): View|Factory|Application
     {
         $task = new Task();
-        $statuses = TaskStatus::all()->mapWithKeys(function ($item) {
-            return [$item['id'] => $item['name']];
-        })->all();
-        $allUsers = User::all()->mapWithKeys(function ($item) {
-            return [$item['id'] => $item['name']];
-        })->all();
+        $statuses = TaskStatus::pluck('name', 'id');
+        $users = User::pluck('name', 'id');
+        $labels = Label::pluck('name', 'id');
 
-        return view('tasks.create', compact(['task', 'statuses', 'allUsers']));
+        return view('tasks.create', compact(['task', 'statuses', 'users', 'labels']));
     }
 
     /**
@@ -57,7 +54,8 @@ class TaskController extends Controller
             'name' => 'required|unique:tasks',
             'description' => 'nullable|max:255',
             'status_id' => 'required',
-            'assigned_to_id' => 'nullable'
+            'assigned_to_id' => 'nullable',
+            'labels' => 'nullable'
         ]);
 
         $userId = Auth::id();
@@ -70,6 +68,9 @@ class TaskController extends Controller
         $newTask->creator()->associate($user);
         $newTask->status()->associate($status);
         $newTask->assignedUser()->associate($assignedUser);
+        $newTask->save();
+
+        $newTask->labels()->attach($data['labels']);
         $newTask->save();
 
         flash(__('messages.created', ['name' => 'task']));

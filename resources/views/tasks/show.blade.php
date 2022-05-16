@@ -17,5 +17,11 @@
     <p>Name: {{ $task->name }}</p>
     <p>Status: {{ $task->status->name }}</p>
     <p>Description: {{ $task->description }}</p>
+    <p>Label:</p>
+    <ul>
+        @foreach($task->labels as $label)
+            <li>{{ $label->name }}</li>
+        @endforeach
+    </ul>
 
 @endsection

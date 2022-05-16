@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Label;
 use App\Models\Task;
 use App\Models\TaskStatus;
 use App\Models\User;
@@ -44,18 +45,20 @@ class TaskTest extends TestCase
     public function testStoreTask()
     {
         $assignedUser = User::factory()->create();
+        $label = Label::factory()->create();
         $newTask = [
             'name' => 'task',
             'description' => 'description',
             'status_id' => $this->taskStatus->id,
             'assigned_to_id' => $assignedUser->id,
+            'labels' => [$label->id]
         ];
         $this->actingAs($this->user)
             ->post(route('tasks.store', $newTask))
             ->assertRedirect(route('tasks.index'));
         $this->get(route('tasks.index'))
             ->assertSee($newTask['name']);
-        $this->assertDatabaseHas('tasks', $newTask);
+        $this->assertDatabaseCount('tasks', 1);
     }
 
     public function testShowTask()

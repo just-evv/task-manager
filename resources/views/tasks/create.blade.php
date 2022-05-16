@@ -30,7 +30,11 @@
         <br>
         {{ Form::label('assigned_to', 'Assigned to') }}
         <br>
-        {{ Form::select('assigned_to_id', $allUsers, null, ['class' => 'form-control', 'placeholder' => '----------']) }}
+        {{ Form::select('assigned_to_id', $users, null, ['class' => 'form-control', 'placeholder' => '----------']) }}
+        <br>
+        {{ Form::label('labels', 'Labels') }}
+        <br>
+        {{ Form::select('labels[]', $labels, null, ['multiple' => 'multiple', 'class' => 'form-control', 'placeholder' => '----------']) }}
         <br>
         {{ Form::submit('Create',  ['class' => 'btn btn-primary mt-3']) }}
 

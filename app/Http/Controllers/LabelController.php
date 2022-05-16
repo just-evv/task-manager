@@ -71,7 +71,7 @@ class LabelController extends Controller
      * Update the specified resource in storage.
      *
      * @param Request $request
-     * @param Label $labe
+     * @param Label $label
      * @return RedirectResponse
      */
     public function update(Request $request, Label $label): RedirectResponse
@@ -94,10 +94,20 @@ class LabelController extends Controller
      * Remove the specified resource from storage.
      *
      * @param Label $label
-     * @return Response
+     * @return RedirectResponse
      */
-    public function destroy(Label $label)
+    public function destroy(Label $label): RedirectResponse
     {
-        //
+        $deletingLabel = Label::findOrFail($label->id);
+        $tasks = $deletingLabel->tasks()->get();
+
+        if ($tasks->isEmpty()) {
+            $deletingLabel->delete();
+            flash(__('messages.deleted', ['name' => 'label']));
+            return redirect()->route('labels.index');
+        }
+
+        flash(__('messages.unsuccessful', ['name' => 'label']))->warning();
+        return redirect()->route('labels.index');
     }
 }
