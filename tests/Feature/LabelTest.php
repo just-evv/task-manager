@@ -46,4 +46,15 @@ class LabelTest extends TestCase
             ->assertOk()
             ->assertSee('form');
     }
+
+    public function testUpdateLabel()
+    {
+        $label = Label::factory()->create();
+        $request = ['name' => 'new name', 'description' => ''];
+        $this->patch(route('labels.update', $label), $request)
+            ->assertRedirect(route('labels.index'))
+            ->assertSessionDoesntHaveErrors();
+        $updatedLabel = Label::findOrFail($label->id);
+        $this->assertEquals($request['name'], $updatedLabel->name);
+    }
 }

@@ -72,11 +72,22 @@ class LabelController extends Controller
      *
      * @param Request $request
      * @param Label $labe
-     * @return Response
+     * @return RedirectResponse
      */
-    public function update(Request $request, Label $label)
+    public function update(Request $request, Label $label): RedirectResponse
     {
-        //
+        $updatingLabel = Label::findOrFail($label->id);
+        $data = $this->validate($request, [
+            'name' => 'required|unique:labels,name,' . $updatingLabel->id,
+            'description' => 'nullable|max:255'
+        ]);
+
+        $updatingLabel->fill($data);
+        $updatingLabel->save();
+
+        flash(__('messages.updated', ['name' => 'label']));
+
+        return redirect()->route('labels.index');
     }
 
     /**
