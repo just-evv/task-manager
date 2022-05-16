@@ -20,9 +20,10 @@ setup:
 	composer install
 	cp -n .env.example .env|| true
 	php artisan key:gen --ansi
-	docker-compose up -d
-	docker-compose exec -T laravel.test php artisan migrate
+	./vendor/bin/sail up -d
+	./vendor/bin/sail artisan migrate
 	npm install
 
 test-coverage:
-	docker-compose exec -T laravel.test php artisan test
+	./vendor/bin/sail artisan db:seed
+	./vendor/bin/sail artisan test --coverage-clover coverage.xml
