@@ -6,8 +6,6 @@ use App\Models\Label;
 use App\Models\Task;
 use App\Models\TaskStatus;
 use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
@@ -23,6 +21,10 @@ class TaskTest extends TestCase
         $this->taskStatus = TaskStatus::factory()->create();
     }
 
+    /**
+     * @covers \App\Http\Controllers\TaskController::index
+     *
+     */
     public function testTasksIndex()
     {
         $this->get(route('tasks.index'))
@@ -36,12 +38,20 @@ class TaskTest extends TestCase
             ->assertSee('Create new task');
     }
 
+    /**
+     * @covers \App\Http\Controllers\TaskController::create
+     *
+     */
     public function testCreateTask()
     {
         $this->get(route('tasks.create'))
             ->assertOk();
     }
 
+    /**
+     * @covers \App\Http\Controllers\TaskController::store
+     *
+     */
     public function testStoreTask()
     {
         $assignedUser = User::factory()->create();
@@ -61,6 +71,10 @@ class TaskTest extends TestCase
         $this->assertDatabaseCount('tasks', 1);
     }
 
+    /**
+     * @covers \App\Http\Controllers\TaskController::show
+     *
+     */
     public function testShowTask()
     {
         $task = Task::factory()->create();
@@ -68,6 +82,10 @@ class TaskTest extends TestCase
             ->assertSee([$task->name, $task->description, $task->status->name]);
     }
 
+    /**
+     * @covers \App\Http\Controllers\TaskController::update
+     *
+     */
     public function testUpdateTask()
     {
         $task = Task::factory()->create();
@@ -83,7 +101,11 @@ class TaskTest extends TestCase
         $this->assertEquals($request['name'], $updatedTask->name);
     }
 
-    public function testDeleteTask()
+    /**
+     * @covers \App\Http\Controllers\TaskController::destroy
+     *
+     */
+    public function testDestroyTask()
     {
         $task = Task::factory()->create();
         $this->assertModelExists($task);
