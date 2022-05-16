@@ -20,13 +20,9 @@ setup:
 	composer install
 	cp -n .env.example .env|| true
 	php artisan key:gen --ansi
+	docker-compose up -d
+	docker-compose exec -T laravel.test php artisan migrate
 	npm install
 
 test-coverage:
-	touch test.sqlite
-	php artisan config:cache --env=testing
-	php artisan key:gen --ansi
-	php artisan migrate
-	php artisan db:seed
-	php artisan test --coverage-clover coverage.xml
-	rm test.sqlite
+	docker-compose exec -T laravel.test php artisan test
