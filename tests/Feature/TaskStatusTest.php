@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Http\Controllers\Controller;
 use App\Models\Task;
 use App\Models\TaskStatus;
 use App\Models\User;
@@ -25,12 +26,20 @@ class TaskStatusTest extends TestCase
             ->assertSee(['Create', 'Action']);
     }
 
+    /**
+     * @covers \App\Http\Controllers\TaskStatusController::create
+     *
+     */
     public function testCreateStatus()
     {
         $this->get(route('task_statuses.create'))
             ->assertOk();
     }
 
+    /**
+     * @covers \App\Http\Controllers\TaskStatusController::store
+     *
+     */
     public function testStoreStatus()
     {
         $newStatus = ['name' => 'testing status'];
@@ -41,6 +50,10 @@ class TaskStatusTest extends TestCase
         $this->assertDatabaseHas('task_statuses', $newStatus);
     }
 
+    /**
+     * @covers \App\Http\Controllers\TaskStatusController::edit
+     *
+     */
     public function testEditStatus()
     {
         $status = TaskStatus::factory()->create();
@@ -49,6 +62,10 @@ class TaskStatusTest extends TestCase
             ->assertSee('form');
     }
 
+    /**
+     * @covers \App\Http\Controllers\TaskStatusController::update
+     *
+     */
     public function testUpdateStatus()
     {
         $status = TaskStatus::factory()->create();
@@ -60,7 +77,11 @@ class TaskStatusTest extends TestCase
         $this->assertEquals($request['name'], $updatedStatus->name);
     }
 
-    public function testDeleteStatusNotAssigned()
+    /**
+     * @covers \App\Http\Controllers\TaskStatusController::destroy
+     *
+     */
+    public function testDestroyStatusNotAssigned()
     {
         $status = TaskStatus::factory()->create();
         $this->assertModelExists($status);
@@ -73,7 +94,11 @@ class TaskStatusTest extends TestCase
         $this->assertDatabaseMissing('task_statuses', ['id' => $statusId]);
     }
 
-    public function testDeleteStatusAssigned()
+    /**
+     * @covers \App\Http\Controllers\TaskStatusController::destroy
+     *
+     */
+    public function testDestroyStatusAssigned()
     {
         $task = Task::factory()->create();
         $status = $task->status;

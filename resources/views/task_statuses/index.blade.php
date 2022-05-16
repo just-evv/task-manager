@@ -11,7 +11,7 @@
         <tr>
             <th>ID</th>
             <th>Name</th>
-            <th>Created</th>
+            <th>Created at</th>
             @canany(['update-task_status', 'delete-task_status'], $statuses)
             <th>Action</th>
             @endcanany

@@ -48,6 +48,16 @@ class AuthServiceProvider extends ServiceProvider
             return $user->id === $task->creator()->id;
         });
 
+        Gate::define('create-label', function (User $user) {
+            return true;
+        });
+        Gate::define('update-label', function (User $user) {
+            return true;
+        });
+        Gate::define('delete-label', function (User $user) {
+            return true;
+        });
+
         //
     }
 }
