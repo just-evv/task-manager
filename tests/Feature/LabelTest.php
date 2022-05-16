@@ -25,7 +25,7 @@ class LabelTest extends TestCase
     }
 
     /**
-     * @covers LabelController::create
+     * @covers \App\Http\Controllers\LabelController::create
      *
      */
     public function testCreateLabel()
@@ -35,7 +35,7 @@ class LabelTest extends TestCase
     }
 
     /**
-     * @covers LabelController::store
+     * @covers \App\Http\Controllers\LabelController::store
      *
      */
     public function testStoreLabel()
@@ -47,7 +47,7 @@ class LabelTest extends TestCase
     }
 
     /**
-     * @covers LabelController::edit
+     * @covers \App\Http\Controllers\LabelController::edit
      *
      */
     public function testEditLabel()
@@ -59,7 +59,7 @@ class LabelTest extends TestCase
     }
 
     /**
-     * @covers LabelController::update
+     * @covers \App\Http\Controllers\LabelController::update
      *
      */
     public function testUpdateLabel()
@@ -74,7 +74,7 @@ class LabelTest extends TestCase
     }
 
     /**
-     * @covers LabelController::destroy
+     * @covers \App\Http\Controllers\LabelController::destroy
      *
      */
     public function testDestroyLabel()
