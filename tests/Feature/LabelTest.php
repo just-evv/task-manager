@@ -31,6 +31,14 @@ class LabelTest extends TestCase
             ->assertOk();
     }
 
+    public function testStoreLabel()
+    {
+        $newLabel = ['name' => 'new label'];
+        $this->post(route('labels.store', $newLabel))
+            ->assertRedirect(route('labels.index'));
+        $this->assertDatabaseHas('labels', $newLabel);
+    }
+
     public function testEditLabel()
     {
         $label = Label::factory()->create();

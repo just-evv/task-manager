@@ -22,7 +22,7 @@
     <br>
     {{ Form::label('description', 'Description') }}
     <br>
-    {{ Form::textarea('description', null , ['class' => 'form-control', 'rows' => '10']) }}
+    {{ Form::textarea('description', null , ['class' => 'form-control', 'rows' => '10', 'cols' => '50']) }}
     <br>
     {{ Form::submit('Create',  ['class' => 'btn btn-primary mt-3']) }}
 

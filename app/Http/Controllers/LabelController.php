@@ -6,6 +6,7 @@ use App\Models\Label;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -36,12 +37,22 @@ class LabelController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return Response
+     * @param Request $request
+     * @return RedirectResponse
      */
-    public function store(Request $request)
+    public function store(Request $request): RedirectResponse
     {
-        //
+        $data = $this->validate($request, [
+            'name' => 'required|unique:labels',
+            'description' => 'nullable|max:255'
+        ]);
+
+        $newLabel = new Label($data);
+        $newLabel->save();
+
+        flash(__('messages.created', ['name' => 'label']));
+
+        return redirect()->route('labels.index');
     }
 
     /**
@@ -59,8 +70,8 @@ class LabelController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param Label $label
+     * @param Request $request
+     * @param Label $labe
      * @return Response
      */
     public function update(Request $request, Label $label)
