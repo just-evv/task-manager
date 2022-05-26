@@ -36,15 +36,15 @@
                     <ul class="navbar-nav me-auto">
                         <li class="nav-item">
                             <a class="nav-link " href="{{ route('tasks.index') }}">
-                                Задачи                            </a>
+                                Tasks                            </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link " href="{{ route('task_statuses.index') }}">
-                                Статусы                            </a>
+                                Statuses                            </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link " href="{{ route('labels.index') }}">
-                                Метки                            </a>
+                                Labels                            </a>
                         </li>
 
                     </ul>

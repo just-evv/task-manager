@@ -49,12 +49,12 @@
         @foreach ($filter as $task)
             <tr>
                 <td>{{ $task->id }}</td>
+                <td>{{ $task->status->name }}</td>
                 <td>
                     <a class="text-decoration-none" href="{{ route('tasks.show', $task) }}">
-                    {{ $task->status->name }}
+                    {{ $task->name }}
                     </a>
                 </td>
-                <td>{{ $task->name }}</td>
                 <td>{{ $task->creator->name }}</td>
                 <td>{{ $task->assignedUser->name ?? ''}}</td>
                 <td>{{ $task->created_at->toDateString() }}</td>
