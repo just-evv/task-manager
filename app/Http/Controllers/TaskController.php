@@ -61,12 +61,14 @@ class TaskController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+        if ($request->user()->cannot('create', Task::class)) {
+            abort(403);
+        }
         $data = $this->validate($request, [
             'name' => 'required|unique:tasks',
             'description' => 'nullable|max:255',
             'status_id' => 'required',
             'assigned_to_id' => 'nullable',
-            'labels' => 'nullable'
         ]);
 
         $userId = Auth::id();
@@ -81,7 +83,7 @@ class TaskController extends Controller
         $newTask->assignedUser()->associate($assignedUser);
         $newTask->save();
 
-        $newTask->labels()->attach($data['labels']);
+        $newTask->labels()->attach($request->labels);
         $newTask->save();
 
         flash(__('messages.created', ['name' => 'task']));
@@ -124,6 +126,7 @@ class TaskController extends Controller
      */
     public function update(Request $request, Task $task): RedirectResponse
     {
+
         $task = Task::findOrFail($task->id);
         $data = $this->validate($request, [
             'name' => 'required|unique:tasks,name,' . $task->id,
@@ -151,7 +154,7 @@ class TaskController extends Controller
      * @param Task $task
      * @return RedirectResponse
      */
-    public function destroy(Task $task): RedirectResponse
+    public function destroy(Request $request, Task $task): RedirectResponse
     {
         $task = Task::findOrFail($task->id);
         $task->delete();

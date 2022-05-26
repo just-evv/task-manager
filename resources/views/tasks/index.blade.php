@@ -25,7 +25,7 @@
         {{ Form::close() }}
         </div>
 
-        @can('create-task')
+        @can('create', App\Models\Task::class)
             <div class="ms-auto">
                 <a href="{{ route('tasks.create') }}" class="btn btn-primary ml-auto">Create new task</a>
             </div>
@@ -41,9 +41,9 @@
             <th>Created by</th>
             <th>Assigned to</th>
             <th>Created at</th>
-            @canany(['edit-task'], $filter)
+            @can('create', App\Models\Task::class)
                 <th>Action</th>
-            @endcanany
+            @endcan
         </tr>
         </thead>
         @foreach ($filter as $task)
@@ -58,7 +58,7 @@
                 <td>{{ $task->creator->name }}</td>
                 <td>{{ $task->assignedUser->name ?? ''}}</td>
                 <td>{{ $task->created_at->toDateString() }}</td>
-                @canany(['edit-task', 'delete-task'], $task)
+                @canany(['update', 'delete'], $task)
                     <td>
                         <a class="text-decoration-none" href="{{ route('tasks.edit', $task) }}">Edit</a>
                         <a class="text-danger text-decoration-none"
