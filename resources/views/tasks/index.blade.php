@@ -3,30 +3,33 @@
 @section('content')
     @include('flash::message')
     <h1 class="mb-5">Tasks</h1>
+
     <div class="d-flex mb-3">
             <!-- Form -->
+        {{ Form::open(['route' => 'tasks.index', 'method' => 'GET']) }}
 
-        {{ Form::open(['route' => 'tasks.index', 'method' => 'GET', 'class' => "form-inline"]) }}
-            {{ Form::label('filter[status_id]', 'Status', ['class' => "sr-only"]) }}
-            {{ Form::select('filter[status_id]', $statuses , null, ['placeholder' => 'Status', 'class' => "form-control mb-2 mr-sm-2"]) }}
+        <div class="row g-1">
 
-            {{ Form::label('filter[created_by_id]', 'Creator', ['class' => "sr-only"]) }}
-            {{ Form::select('filter[created_by_id]', $users , null, ['placeholder' => 'Creator', 'class' => "form-control mb-2 mr-sm-2"]) }}
+            <div class="col">
+                {{ Form::select('filter[status_id]', $statuses , null, ['placeholder' => 'Status', 'class' => "form-select me-2"]) }}
+            </div>
+            <div class="col">
+                {{ Form::select('filter[created_by_id]', $users , null, ['placeholder' => 'Creator', 'class' => "form-select me-2"]) }}
+            </div>
+            <div class="col">
+                {{ Form::select('filter[assigned_to_id]', $users , null, ['placeholder' => 'Assigned to', 'class' => "form-select me-2"]) }}
+            </div>
+            <div class="col">
+                {{ Form::submit('Apply', ['class' => 'btn btn-outline-primary me-2']) }}
+            </div>
+        {{ Form::close() }}
+        </div>
 
-
-            {{ Form::select('filter[assigned_to_id]', $users , null, ['placeholder' => 'Assigned to', 'class' => "form-group col-auto me-2"]) }}
-
-            {{ Form::submit('Apply', ['class' => 'btn btn-outline-primary m-2 col-auto']) }}
-            {{ Form::close() }}
-
-                @can('create-task')
-                    <div class="col-auto">
-                        <a href="{{ route('tasks.create') }}" class="btn btn-primary m-2 pull-right">Create new task</a>
-                    </div>
-                @endcan
-
-
-
+        @can('create-task')
+            <div class="ms-auto">
+                <a href="{{ route('tasks.create') }}" class="btn btn-primary ml-auto">Create new task</a>
+            </div>
+        @endcan
     </div>
 
     <table class="table me-2">
@@ -71,4 +74,5 @@
         @endforeach
     </table>
     {{ $filter->links('pagination::bootstrap-4') }}
+
 @endsection
