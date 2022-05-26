@@ -13,6 +13,8 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
+use Spatie\QueryBuilder\AllowedFilter;
+use Spatie\QueryBuilder\QueryBuilder;
 
 class TaskController extends Controller
 {
@@ -23,8 +25,17 @@ class TaskController extends Controller
      */
     public function index(): View|Factory|Application
     {
-        $tasks = Task::paginate();
-        return view('tasks.index', compact('tasks'));
+        $statuses = TaskStatus::pluck('name', 'id');
+        $users = User::pluck('name', 'id');
+
+        $filter = QueryBuilder::for(Task::class)
+            ->allowedFilters([
+                AllowedFilter::exact('status_id'),
+                AllowedFilter::exact('created_by_id'),
+                AllowedFilter::exact('assigned_to_id')])
+            ->paginate();
+
+        return view('tasks.index', compact('filter', 'statuses', 'users'));
     }
 
     /**
@@ -99,12 +110,8 @@ class TaskController extends Controller
     public function edit(Task $task): View|Factory|Application
     {
         $task = Task::findOrFail($task->id);
-        $statuses = TaskStatus::all()->mapWithKeys(function ($item) {
-            return [$item['id'] => $item['name']];
-        })->all();
-        $allUsers = User::all()->mapWithKeys(function ($item) {
-            return [$item['id'] => $item['name']];
-        })->all();
+        $statuses = TaskStatus::pluck('name', 'id');
+        $allUsers = User::pluck('name', 'id');
         return view('tasks.edit', compact(['task', 'statuses', 'allUsers']));
     }
 

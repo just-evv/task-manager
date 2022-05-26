@@ -4,12 +4,29 @@
     @include('flash::message')
     <h1 class="mb-5">Tasks</h1>
     <div class="d-flex mb-3">
-        @can('create-task')
-            <a href="{{ route('tasks.create') }}" class="btn btn-primary">Create new task</a>
-        @endcan
-        <div>
-                <!-- Form -->
-        </div>
+            <!-- Form -->
+
+        {{ Form::open(['route' => 'tasks.index', 'method' => 'GET', 'class' => "form-inline"]) }}
+            {{ Form::label('filter[status_id]', 'Status', ['class' => "sr-only"]) }}
+            {{ Form::select('filter[status_id]', $statuses , null, ['placeholder' => 'Status', 'class' => "form-control mb-2 mr-sm-2"]) }}
+
+            {{ Form::label('filter[created_by_id]', 'Creator', ['class' => "sr-only"]) }}
+            {{ Form::select('filter[created_by_id]', $users , null, ['placeholder' => 'Creator', 'class' => "form-control mb-2 mr-sm-2"]) }}
+
+
+            {{ Form::select('filter[assigned_to_id]', $users , null, ['placeholder' => 'Assigned to', 'class' => "form-group col-auto me-2"]) }}
+
+            {{ Form::submit('Apply', ['class' => 'btn btn-outline-primary m-2 col-auto']) }}
+            {{ Form::close() }}
+
+                @can('create-task')
+                    <div class="col-auto">
+                        <a href="{{ route('tasks.create') }}" class="btn btn-primary m-2 pull-right">Create new task</a>
+                    </div>
+                @endcan
+
+
+
     </div>
 
     <table class="table me-2">
@@ -21,12 +38,12 @@
             <th>Created by</th>
             <th>Assigned to</th>
             <th>Created at</th>
-            @canany(['edit-task'], $tasks)
+            @canany(['edit-task'], $filter)
                 <th>Action</th>
             @endcanany
         </tr>
         </thead>
-        @foreach ($tasks as $task)
+        @foreach ($filter as $task)
             <tr>
                 <td>{{ $task->id }}</td>
                 <td>
@@ -53,5 +70,5 @@
             </tr>
         @endforeach
     </table>
-    {{ $tasks->links('pagination::bootstrap-4') }}
+    {{ $filter->links('pagination::bootstrap-4') }}
 @endsection
