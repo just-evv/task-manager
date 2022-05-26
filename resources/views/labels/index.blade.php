@@ -3,7 +3,7 @@
 @section('content')
     @include('flash::message')
     <h1 class="mb-5">Labels</h1>
-    @can('create-label')
+    @can('create', App\Models\Label::class)
         <a href="{{ route('labels.create') }}" class="btn btn-primary">Create new label</a>
     @endcan
     <table class="table me-2">
@@ -13,9 +13,9 @@
             <th>Name</th>
             <th>Description</th>
             <th>Created at</th>
-            @canany(['update-label', 'delete-label'], $labels)
+            @can('create', App\Models\Label::class)
                 <th>Action</th>
-            @endcanany
+            @endcan
         </tr>
         </thead>
         @foreach($labels as $label)
@@ -25,7 +25,7 @@
                 <td>{{ $label->name }}</td>
                 <td>{{ $label->description ?? '' }}</td>
                 <td>{{ $label->created_at->toDateString() }}</td>
-                @canany(['update-label', 'delete-label'], $label)
+                @canany(['update', 'delete'], $label)
                     <td>
                         <a class="text-decoration-none" href="{{ route('labels.edit', $label) }}">Edit</a>
                         <a class="text-danger text-decoration-none"

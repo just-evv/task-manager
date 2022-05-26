@@ -13,6 +13,8 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
+use Spatie\QueryBuilder\AllowedFilter;
+use Spatie\QueryBuilder\QueryBuilder;
 
 class TaskController extends Controller
 {
@@ -23,8 +25,17 @@ class TaskController extends Controller
      */
     public function index(): View|Factory|Application
     {
-        $tasks = Task::paginate();
-        return view('tasks.index', compact('tasks'));
+        $statuses = TaskStatus::pluck('name', 'id');
+        $users = User::pluck('name', 'id');
+
+        $filter = QueryBuilder::for(Task::class)
+            ->allowedFilters([
+                AllowedFilter::exact('status_id'),
+                AllowedFilter::exact('created_by_id'),
+                AllowedFilter::exact('assigned_to_id')])
+            ->paginate();
+
+        return view('tasks.index', compact('filter', 'statuses', 'users'));
     }
 
     /**
@@ -50,12 +61,14 @@ class TaskController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+        if ($request->user()->cannot('create', Task::class)) {
+            abort(403);
+        }
         $data = $this->validate($request, [
             'name' => 'required|unique:tasks',
             'description' => 'nullable|max:255',
             'status_id' => 'required',
             'assigned_to_id' => 'nullable',
-            'labels' => 'nullable'
         ]);
 
         $userId = Auth::id();
@@ -70,7 +83,7 @@ class TaskController extends Controller
         $newTask->assignedUser()->associate($assignedUser);
         $newTask->save();
 
-        $newTask->labels()->attach($data['labels']);
+        $newTask->labels()->attach($request->labels);
         $newTask->save();
 
         flash(__('messages.created', ['name' => 'task']));
@@ -99,12 +112,8 @@ class TaskController extends Controller
     public function edit(Task $task): View|Factory|Application
     {
         $task = Task::findOrFail($task->id);
-        $statuses = TaskStatus::all()->mapWithKeys(function ($item) {
-            return [$item['id'] => $item['name']];
-        })->all();
-        $allUsers = User::all()->mapWithKeys(function ($item) {
-            return [$item['id'] => $item['name']];
-        })->all();
+        $statuses = TaskStatus::pluck('name', 'id');
+        $allUsers = User::pluck('name', 'id');
         return view('tasks.edit', compact(['task', 'statuses', 'allUsers']));
     }
 
@@ -117,6 +126,7 @@ class TaskController extends Controller
      */
     public function update(Request $request, Task $task): RedirectResponse
     {
+
         $task = Task::findOrFail($task->id);
         $data = $this->validate($request, [
             'name' => 'required|unique:tasks,name,' . $task->id,
@@ -144,7 +154,7 @@ class TaskController extends Controller
      * @param Task $task
      * @return RedirectResponse
      */
-    public function destroy(Task $task): RedirectResponse
+    public function destroy(Request $request, Task $task): RedirectResponse
     {
         $task = Task::findOrFail($task->id);
         $task->delete();

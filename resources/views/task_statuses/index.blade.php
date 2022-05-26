@@ -3,7 +3,7 @@
 @section('content')
     @include('flash::message')
     <h1 class="mb-5">Statuses</h1>
-    @can('create-task_status')
+    @can('create', App\Models\TaskStatus::class)
     <a href="{{ route('task_statuses.create') }}" class="btn btn-primary">Create new status</a>
     @endcan
     <table class="table me-2">
@@ -12,9 +12,9 @@
             <th>ID</th>
             <th>Name</th>
             <th>Created at</th>
-            @canany(['update-task_status', 'delete-task_status'], $statuses)
+            @can('create', App\Models\TaskStatus::class)
             <th>Action</th>
-            @endcanany
+            @endcan
         </tr>
         </thead>
         @foreach($statuses as $status)
@@ -23,7 +23,7 @@
             <td>{{ $status->id }}</td>
             <td>{{ $status->name}}</td>
             <td>{{ $status->created_at->toDateString() }}</td>
-            @canany(['update-task_status', 'delete-task_status'], $status)
+            @canany(['update', 'delete'], $status)
             <td>
                 <a class="text-decoration-none" href="{{ route('task_statuses.edit', $status) }}">Update</a>
                 <a class="text-danger text-decoration-none"
