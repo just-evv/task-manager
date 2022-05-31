@@ -21,6 +21,7 @@ deploy:
 
 setup:
 	composer install
+	composer update
 	cp -n .env.example .env|| true
 	php artisan key:gen --ansi
 	./vendor/bin/sail up -d

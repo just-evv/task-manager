@@ -16,7 +16,7 @@ return new class extends Migration
         Schema::create('label_task', function (Blueprint $table) {
             $table->id();
             $table->bigInteger('label_id');
-            $table->foreign('label_id')->references('id')->on('labels');
+            $table->foreign('label_id')->references('id')->on('labels')->onDelete('cascade');
             $table->bigInteger('task_id');
             $table->foreign('task_id')->references('id')->on('tasks')->onDelete('cascade');
             $table->timestamps();
