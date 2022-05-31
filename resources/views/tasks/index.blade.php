@@ -58,18 +58,20 @@
                 <td>{{ $task->creator->name }}</td>
                 <td>{{ $task->assignedUser->name ?? ''}}</td>
                 <td>{{ $task->created_at->toDateString() }}</td>
-                @canany(['update', 'delete'], $task)
+                @can('update', $task)
                     <td>
                         <a class="text-decoration-none" href="{{ route('tasks.edit', $task) }}">Edit</a>
-                        <a class="text-danger text-decoration-none"
-                           href="{{ route('tasks.destroy', $task) }}"
-                           data-confirm="Are you sure?"
-                           data-method="delete"
-                           rel="nofollow">
-                            Delete
-                        </a>
+                            @can('delete', $task)
+                                <a class="text-danger text-decoration-none"
+                                   href="{{ route('tasks.destroy', $task) }}"
+                                   data-confirm="Are you sure?"
+                                   data-method="delete"
+                                   rel="nofollow">
+                                    Delete
+                                </a>
+                            @endcan
                     </td>
-                @endcanany
+                @endcan
             </tr>
         @endforeach
     </table>

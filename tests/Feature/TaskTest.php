@@ -92,7 +92,8 @@ class TaskTest extends TestCase
         $request = ['name' => 'new task',
             'description' => '',
             'status_id' => $task->status->id,
-            'assigned_to_id' => $this->user->id
+            'assigned_to_id' => $this->user->id,
+            'labels' => [[null]]
             ];
         $this->patch(route('tasks.update', $task), $request)
             ->assertRedirect(route('tasks.index'))

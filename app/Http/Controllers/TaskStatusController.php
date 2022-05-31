@@ -9,6 +9,7 @@ use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 
 class TaskStatusController extends Controller
@@ -79,10 +80,8 @@ class TaskStatusController extends Controller
     {
         $status = TaskStatus::findOrFail($taskStatus->id);
         $data = $this->validate($request, [
-
-            'name' => 'required|unique:task_statuses,name,' . $status->id,
+            'name' => ['required', Rule::unique('task_statuses')->ignore($status)]
         ]);
-
         $status->fill($data);
         $status->save();
 

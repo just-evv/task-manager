@@ -27,11 +27,15 @@
         <br>
         {{ Form::label('status_id', 'Status') }}
         <br>
-        {{ Form::select('status_id', $statuses, null, ['class' => 'form-control']) }}
+        {{ Form::select('status_id', $statuses, null, ['class' => 'form-control', 'placeholder' => '----------']) }}
         <br>
         {{ Form::label('assigned_to', 'Assigned to') }}
         <br>
         {{ Form::select('assigned_to_id', $allUsers, null, ['class' => 'form-control', 'placeholder' => '----------']) }}
+        <br>
+        {{ Form::label('labels', 'Labels') }}
+        <br>
+        {{ Form::select('labels[]', $labels, null, ['multiple' => 'multiple', 'class' => 'form-control', 'placeholder' => '----------']) }}
         <br>
         {{ Form::submit('Edit', ['class' => 'btn btn-primary mt-3']) }}
         {{ Form::close() }}

@@ -4,6 +4,9 @@ up:
 down:
 	./vendor/bin/sail down
 
+restart:
+	./vendor/bin/sail restart
+
 test:
 	./vendor/bin/sail test
 

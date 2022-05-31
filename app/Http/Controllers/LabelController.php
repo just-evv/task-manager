@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreLabelRequest;
+use App\Http\Requests\UpdateLabelRequest;
 use App\Models\Label;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
@@ -37,16 +39,12 @@ class LabelController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param Request $request
+     * @param StoreLabelRequest $request
      * @return RedirectResponse
      */
-    public function store(Request $request): RedirectResponse
+    public function store(StoreLabelRequest $request): RedirectResponse
     {
-        $data = $this->validate($request, [
-            'name' => 'required|unique:labels',
-            'description' => 'nullable|max:255'
-        ]);
-
+        $data = $request->validated();
         $newLabel = new Label($data);
         $newLabel->save();
 
@@ -70,17 +68,14 @@ class LabelController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param Request $request
+     * @param UpdateLabelRequest $request
      * @param Label $label
      * @return RedirectResponse
      */
-    public function update(Request $request, Label $label): RedirectResponse
+    public function update(UpdateLabelRequest $request, Label $label): RedirectResponse
     {
         $updatingLabel = Label::findOrFail($label->id);
-        $data = $this->validate($request, [
-            'name' => 'required|unique:labels,name,' . $updatingLabel->id,
-            'description' => 'nullable|max:255'
-        ]);
+        $data = $request->validated();
 
         $updatingLabel->fill($data);
         $updatingLabel->save();

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreTaskRequest;
+use App\Http\Requests\UpdateTaskRequest;
 use App\Models\Label;
 use App\Models\Task;
 use App\Models\TaskStatus;
@@ -33,7 +35,7 @@ class TaskController extends Controller
                 AllowedFilter::exact('status_id'),
                 AllowedFilter::exact('created_by_id'),
                 AllowedFilter::exact('assigned_to_id')])
-            ->paginate();
+            ->paginate(15);
 
         return view('tasks.index', compact('filter', 'statuses', 'users'));
     }
@@ -56,38 +58,30 @@ class TaskController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param Request $request
+     * @param StoreTaskRequest $request
      * @throws ValidationException
      */
-    public function store(Request $request): RedirectResponse
+    public function store(StoreTaskRequest $request): RedirectResponse
     {
-        if ($request->user()->cannot('create', Task::class)) {
-            abort(403);
-        }
-        $data = $this->validate($request, [
-            'name' => 'required|unique:tasks',
-            'description' => 'nullable|max:255',
-            'status_id' => 'required',
-            'assigned_to_id' => 'nullable',
-        ]);
+        $data = $request->validated();
 
         $userId = Auth::id();
         $user = User::find($userId);
         $status = TaskStatus::find($data['status_id']);
         $assignedUser = User::find($data['assigned_to_id']);
+        $label = Label::find($data['labels'][0]);
 
-        $newTask = new Task($data);
+        $task = new Task($data);
 
-        $newTask->creator()->associate($user);
-        $newTask->status()->associate($status);
-        $newTask->assignedUser()->associate($assignedUser);
-        $newTask->save();
+        $task->creator()->associate($user);
+        $task->status()->associate($status);
+        $task->save();
 
-        $newTask->labels()->attach($request->labels);
-        $newTask->save();
+        $task->assignedUser()->associate($assignedUser);
+        $task->labels()->attach($label);
+        $task->save();
 
         flash(__('messages.created', ['name' => 'task']));
-
         return redirect()->route('tasks.index');
     }
 
@@ -114,32 +108,31 @@ class TaskController extends Controller
         $task = Task::findOrFail($task->id);
         $statuses = TaskStatus::pluck('name', 'id');
         $allUsers = User::pluck('name', 'id');
-        return view('tasks.edit', compact(['task', 'statuses', 'allUsers']));
+        $labels = Label::pluck('name', 'id');
+        return view('tasks.edit', compact(['task', 'statuses', 'allUsers', 'labels']));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param Request $request
+     * @param UpdateTaskRequest $request
      * @param Task $task
      * @return RedirectResponse
      */
-    public function update(Request $request, Task $task): RedirectResponse
+    public function update(UpdateTaskRequest $request, Task $task): RedirectResponse
     {
-
         $task = Task::findOrFail($task->id);
-        $data = $this->validate($request, [
-            'name' => 'required|unique:tasks,name,' . $task->id,
-            'description' => 'nullable|max:255',
-            'status_id' => 'required',
-            'assigned_to_id' => 'nullable'
-        ]);
+        $data = $request->validated();
 
         $task->fill($data);
+
         $status = TaskStatus::find($data['status_id']);
         $assignedUser = User::find($data['assigned_to_id']);
+        $label = Label::find($data['labels'][0]);
+
         $task->status()->associate($status);
         $task->assignedUser()->associate($assignedUser);
+        $task->labels()->attach($label);
 
         $task->save();
 
@@ -157,6 +150,7 @@ class TaskController extends Controller
     public function destroy(Request $request, Task $task): RedirectResponse
     {
         $task = Task::findOrFail($task->id);
+        $task->labels()->detach();
         $task->delete();
         flash(__('messages.deleted', ['name' => 'task']));
         return redirect()->route('tasks.index');
