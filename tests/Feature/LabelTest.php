@@ -17,13 +17,6 @@ class LabelTest extends TestCase
         $this->user = User::factory()->create();
     }
 
-    public function testSeeAsUser()
-    {
-        $this->actingAs($this->user)
-            ->get(route('labels.index'))
-            ->assertSee(['Create', 'Action']);
-    }
-
     /**
      * @covers \App\Http\Controllers\LabelController::create
      *

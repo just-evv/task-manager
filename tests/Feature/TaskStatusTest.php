@@ -19,13 +19,6 @@ class TaskStatusTest extends TestCase
         $this->user = User::factory()->create();
     }
 
-    public function testSeeAsUser()
-    {
-        $this->actingAs($this->user)
-            ->get(route('task_statuses.index'))
-            ->assertSee(['Create', 'Action']);
-    }
-
     /**
      * @covers \App\Http\Controllers\TaskStatusController::create
      *

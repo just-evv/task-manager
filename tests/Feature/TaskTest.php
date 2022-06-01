@@ -31,13 +31,6 @@ class TaskTest extends TestCase
             ->assertOk();
     }
 
-    public function testSeeAsUser()
-    {
-        $this->actingAs($this->user)
-            ->get(route('tasks.index'))
-            ->assertSee('Create new task');
-    }
-
     /**
      * @covers \App\Http\Controllers\TaskController::create
      *
