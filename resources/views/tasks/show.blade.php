@@ -2,7 +2,7 @@
 
 @section('content')
 
-    <h1 class="mb-5">Task review: {{ $task->name }}</h1>
+    <h1 class="mb-5">{{ __('Task review') }}: {{ $task->name }}</h1>
 
     @if ($errors->any())
         <div>
@@ -14,10 +14,10 @@
         </div>
     @endif
 
-    <p>Name: {{ $task->name }}</p>
-    <p>Status: {{ $task->status->name }}</p>
-    <p>Description: {{ $task->description }}</p>
-    <p>Label:</p>
+    <p>{{ __('Name') }}: {{ $task->name }}</p>
+    <p>{{ __('Status') }}: {{ $task->status->name }}</p>
+    <p>{{ __('Description') }}: {{ $task->description }}</p>
+    <p>{{ __('Label') }}:</p>
     <ul>
         @foreach($task->labels as $label)
             <li>{{ $label->name }}</li>

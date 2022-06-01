@@ -2,7 +2,7 @@
 
 @section('content')
 
-    <h1 class="mb-5">Create label</h1>
+    <h1 class="mb-5">{{__('Create new label')}}</h1>
 
     @if ($errors->any())
         <div>
@@ -16,15 +16,15 @@
 
     {{ Form::model($label, ['route' => 'labels.store', 'class' => "form-group mb-3"]) }}
 
-    {{ Form::label('name', 'Name') }}
+    {{ Form::label('name', __('Name')) }}
     <br>
     {{ Form::text('name', $value = null , ['class' => 'form-control']) }}
     <br>
-    {{ Form::label('description', 'Description') }}
+    {{ Form::label('description', __('Description')) }}
     <br>
     {{ Form::textarea('description', null , ['class' => 'form-control', 'rows' => '10', 'cols' => '50']) }}
     <br>
-    {{ Form::submit('Create',  ['class' => 'btn btn-primary mt-3']) }}
+    {{ Form::submit(__('Create'),  ['class' => 'btn btn-primary mt-3']) }}
 
     {{ Form::close() }}
 
