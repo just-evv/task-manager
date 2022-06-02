@@ -41,7 +41,9 @@
     "Delete": "Удалить",
     "Create": "Создать",
 
-    "Are you sure?": "Вы уверены?"
+    "Are you sure?": "Вы уверены?",
+
+    "The password must be at least :min characters.": "Пароль должен иметь длину не менее :min символов"
 
 
 
