@@ -23,5 +23,8 @@
     },
     "dependencies": {
         "@rails/ujs": "^6.1.5"
+    },
+    "engines": {
+        "node": "16.x"
     }
 }
