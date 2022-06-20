@@ -24,7 +24,7 @@
             <br>
             {{ Form::textarea('description', null , ['class' => 'form-control', 'rows' => '10']) }}
         </div>
-        {{ Form::submit(__('Edit'), ['class' => 'btn btn-primary mt-3']) }}
+        {{ Form::submit(__('Edit-btn'), ['class' => 'btn btn-primary mt-3']) }}
         {{ Form::close() }}
     </div>
 @endsection

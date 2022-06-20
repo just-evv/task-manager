@@ -13,8 +13,10 @@ return [
         'deleted' => 'Label was deleted successfully',
         'unsuccessful' => 'The attempt to delete the label failed'
     ],
-    'updated' => 'The :name was updated successfully!',
-    'created' => 'The :name was created successfully!',
-    'deleted' => 'The :name was deleted.',
-    'unsuccessful' => 'The attempt to delete :name was unsuccessful'
+    'task' => [
+        'created' => 'Task was created successfully',
+        'updated' => 'Task was updated successfully',
+        'deleted' => 'Task was deleted successfully',
+        'unsuccessful' => 'The attempt to delete the task failed'
+    ]
 ];

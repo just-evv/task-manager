@@ -81,7 +81,7 @@ class TaskController extends Controller
         $task->labels()->attach($label);
         $task->save();
 
-        flash(__('messages.created', ['name' => 'task']));
+        flash(__('messages.task.created'));
         return redirect()->route('tasks.index');
     }
 
@@ -136,7 +136,7 @@ class TaskController extends Controller
 
         $task->save();
 
-        flash(__('messages.updated', ['name' => 'task']));
+        flash(__('messages.task.updated'));
 
         return redirect()->route('tasks.index');
     }
@@ -152,7 +152,7 @@ class TaskController extends Controller
         $task = Task::findOrFail($task->id);
         $task->labels()->detach();
         $task->delete();
-        flash(__('messages.deleted', ['name' => 'task']));
+        flash(__('messages.task.deleted'));
         return redirect()->route('tasks.index');
     }
 }
