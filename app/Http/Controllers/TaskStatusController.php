@@ -45,9 +45,10 @@ class TaskStatusController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+        $messages = ['unique' => __('validation.status.unique')];
         $data = $this->validate($request, [
             'name' => 'required|unique:task_statuses'
-        ]);
+        ], $messages);
 
         $newStatus = new TaskStatus($data);
         $newStatus->save();
@@ -79,9 +80,11 @@ class TaskStatusController extends Controller
     public function update(Request $request, TaskStatus $taskStatus): RedirectResponse
     {
         $status = TaskStatus::findOrFail($taskStatus->id);
+        $messages = ['unique' => __('validation.status.unique')];
+
         $data = $this->validate($request, [
             'name' => ['required', Rule::unique('task_statuses')->ignore($status)]
-        ]);
+        ], $messages);
         $status->fill($data);
         $status->save();
 

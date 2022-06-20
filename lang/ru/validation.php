@@ -12,6 +12,9 @@
 */
 
 return [
+    'status' => [
+        'unique' => 'Статус с таким именем уже существует',
+    ],
     'accepted'             => 'Вы должны принять :attribute.',
     'accepted_if'          => 'Вы должны принять :attribute, когда :other соответствует :value.',
     'active_url'           => 'Значение поля :attribute не является действительным URL.',
