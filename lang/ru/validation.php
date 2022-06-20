@@ -49,7 +49,7 @@ return [
     'enum'                 => 'Выбранное значение для :attribute некорректно.',
     'exists'               => 'Выбранное значение для :attribute некорректно.',
     'file'                 => 'В поле :attribute должен быть указан файл.',
-    'filled'               => 'Поле :attribute обязательно для заполнения.',
+    'filled'               => ' Это обязательно поле.',
     'gt'                   => [
         'array'   => 'Количество элементов в поле :attribute должно быть больше :value.',
         'file'    => 'Размер файла в поле :attribute должен быть больше :value Килобайт(а).',
@@ -112,7 +112,7 @@ return [
     'prohibited_unless'    => 'Значение поля :attribute запрещено, если :other не состоит в :values.',
     'prohibits'            => 'Значение поля :attribute запрещает присутствие :other.',
     'regex'                => 'Значение поля :attribute некорректно.',
-    'required'             => 'Поле :attribute обязательно для заполнения.',
+    'required'             => 'Это обязательное поле.',
     'required_array_keys'  => 'Массив в поле :attribute обязательно должен иметь ключи: :values',
     'required_if'          => 'Поле :attribute обязательно для заполнения, когда :other равно :value.',
     'required_unless'      => 'Поле :attribute обязательно для заполнения, когда :other не равно :values.',

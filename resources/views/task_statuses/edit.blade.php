@@ -8,6 +8,7 @@
         <div>
             <ul>
                 @foreach ($errors->all() as $error)
+                    <span class="invalid-feedback" role="alert">
                     <li>{{ $error }}</li>
                 @endforeach
             </ul>
