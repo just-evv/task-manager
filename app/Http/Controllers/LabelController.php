@@ -48,7 +48,7 @@ class LabelController extends Controller
         $newLabel = new Label($data);
         $newLabel->save();
 
-        flash(__('messages.created', ['name' => 'label']));
+        flash(__('messages.label.created'));
 
         return redirect()->route('labels.index');
     }
@@ -80,7 +80,7 @@ class LabelController extends Controller
         $updatingLabel->fill($data);
         $updatingLabel->save();
 
-        flash(__('messages.updated', ['name' => 'label']));
+        flash(__('messages.label.updated'));
 
         return redirect()->route('labels.index');
     }
@@ -98,11 +98,11 @@ class LabelController extends Controller
 
         if ($tasks->isEmpty()) {
             $deletingLabel->delete();
-            flash(__('messages.deleted', ['name' => 'label']));
+            flash(__('messages.label.deleted'));
             return redirect()->route('labels.index');
         }
 
-        flash(__('messages.unsuccessful', ['name' => 'label']))->warning();
+        flash(__('messages.label.unsuccessful'))->warning();
         return redirect()->route('labels.index');
     }
 }
