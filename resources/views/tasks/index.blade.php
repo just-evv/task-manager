@@ -46,13 +46,14 @@
             @endcan
         </tr>
         </thead>
+        <tbody>
         @foreach ($filter as $task)
             <tr>
                 <td>{{ $task->id }}</td>
                 <td>{{ $task->status->name }}</td>
                 <td>
                     <a class="text-decoration-none" href="{{ route('tasks.show', $task) }}">
-                    {{ $task->name }}
+                        {{ $task->name }}
                     </a>
                 </td>
                 <td>{{ $task->creator->name }}</td>
@@ -61,19 +62,21 @@
                 @can('update', $task)
                     <td>
                         <a class="text-decoration-none" href="{{ route('tasks.edit', $task) }}">{{ __('Edit') }}</a>
-                            @can('delete', $task)
-                                <a class="text-danger text-decoration-none"
-                                   href="{{ route('tasks.destroy', $task) }}"
-                                   data-confirm="{{ __("Are you sure?") }}"
-                                   data-method="delete"
-                                   rel="nofollow">
-                                    {{__('Delete')}}
-                                </a>
-                            @endcan
+                        @can('delete', $task)
+                            <a class="text-danger text-decoration-none"
+                               href="{{ route('tasks.destroy', $task) }}"
+                               data-confirm="{{ __("Are you sure?") }}"
+                               data-method="delete"
+                               rel="nofollow">
+                                {{__('Delete')}}
+                            </a>
+                        @endcan
                     </td>
                 @endcan
             </tr>
         @endforeach
+        </tbody>
+
     </table>
     {{ $filter->links('pagination::bootstrap-4') }}
 
