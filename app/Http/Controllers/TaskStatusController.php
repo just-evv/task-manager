@@ -52,7 +52,7 @@ class TaskStatusController extends Controller
         $newStatus = new TaskStatus($data);
         $newStatus->save();
 
-        flash(__('messages.created', ['name' => 'task status']));
+        flash(__('messages.status.created'));
 
         return redirect()->route('task_statuses.index');
     }
@@ -85,7 +85,7 @@ class TaskStatusController extends Controller
         $status->fill($data);
         $status->save();
 
-        flash(__('messages.updated', ['name' => 'task status']));
+        flash(__('messages.status.updated'));
 
         return redirect()->route('task_statuses.index');
     }
@@ -103,11 +103,11 @@ class TaskStatusController extends Controller
 
         if ($tasks->isEmpty()) {
             $status->delete();
-            flash(__('messages.deleted', ['name' => 'task status']));
+            flash(__('messages.status.deleted'));
             return redirect()->route('task_statuses.index');
         }
 
-         flash(__('messages.unsuccessful', ['name' => 'task status']))->warning();
+         flash(__('messages.status.unsuccessful'))->warning();
          return redirect()->route('task_statuses.index');
     }
 }
