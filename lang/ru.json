@@ -41,6 +41,8 @@
     "Delete": "Удалить",
     "Create": "Создать",
 
+    "Edit-btn": "Обновить",
+
     "Are you sure?": "Вы уверены?",
 
     "The password must be at least :min characters.": "Пароль должен иметь длину не менее :min символов"

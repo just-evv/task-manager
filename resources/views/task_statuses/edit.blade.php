@@ -20,7 +20,7 @@
     <br>
     {{ Form::text('name', $value = null , ['class' => 'form-control']) }}
         </div>
-    {{ Form::submit(__('Edit'), ['class' => 'btn btn-primary mt-3']) }}
+    {{ Form::submit(__('Edit-btn'), ['class' => 'btn btn-primary mt-3']) }}
     {{ Form::close() }}
     </div>
 @endsection
