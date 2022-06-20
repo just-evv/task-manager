@@ -17,6 +17,13 @@ class UpdateLabelRequest extends FormRequest
         return true;
     }
 
+    public function messages(): array
+    {
+        return [
+            'unique' => __('validation.label.unique')
+        ];
+    }
+
     /**
      * Get the validation rules that apply to the request.
      *

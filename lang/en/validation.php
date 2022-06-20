@@ -12,6 +12,12 @@ return [
     | as the size rules. Feel free to tweak each of these messages here.
     |
     */
+    'task' => [
+        'unique' =>  'Task this this name already exists',
+    ],
+    'label' => [
+        'unique' =>  'Label this this name already exists',
+    ],
     'status' => [
         'unique' =>  'Status this this name already exists',
     ],

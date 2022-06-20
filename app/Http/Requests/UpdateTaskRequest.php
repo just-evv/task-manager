@@ -17,6 +17,13 @@ class UpdateTaskRequest extends FormRequest
         return true;
     }
 
+    public function messages(): array
+    {
+        return [
+            'unique' => __('validation.task.unique')
+        ];
+    }
+
     /**
      * Get the validation rules that apply to the request.
      *
