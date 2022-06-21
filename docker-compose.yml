@@ -23,6 +23,7 @@ services:
             - sail
         depends_on:
             - pgsql
+            - selenium
     pgsql:
         image: 'postgres:13'
         ports:
@@ -40,6 +41,12 @@ services:
             test: ["CMD", "pg_isready", "-q", "-d", "${DB_DATABASE}", "-U", "${DB_USERNAME}"]
             retries: 3
             timeout: 5s
+    selenium:
+        image: 'selenium/standalone-chrome'
+        volumes:
+            - '/dev/shm:/dev/shm'
+        networks:
+            - sail
 networks:
     sail:
         driver: bridge

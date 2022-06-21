@@ -50,7 +50,7 @@ class TaskTest extends TestCase
         $assignedUser = User::factory()->create();
         $label = Label::factory()->create();
         $newTask = [
-            'name' => 'task',
+            'name' => 'Task 1',
             'description' => 'description',
             'status_id' => $this->taskStatus->id,
             'assigned_to_id' => $assignedUser->id,
