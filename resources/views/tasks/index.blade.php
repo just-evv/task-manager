@@ -1,6 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
+
     @include('flash::message')
     <h1 class="mb-5">{{__('Tasks')}}</h1>
 
@@ -34,7 +35,7 @@
 
     <table class="table me-2">
         <thead>
-        <tr>
+            <tr>
             <th>{{__('ID')}}</th>
             <th>{{__('Status')}}</th>
             <th>{{__('Name')}}</th>
@@ -46,8 +47,9 @@
             @endcan
         </tr>
         </thead>
+
         <tbody>
-        @foreach ($filter as $task)
+            @foreach ($filter as $task)
             <tr>
                 <td>{{ $task->id }}</td>
                 <td>{{ $task->status->name }}</td>
@@ -58,7 +60,7 @@
                 </td>
                 <td>{{ $task->creator->name }}</td>
                 <td>{{ $task->assignedUser->name ?? ''}}</td>
-                <td>{{ $task->created_at->toDateString() }}</td>
+                <td>{{ $task->created_at->format('d.m.Y') }}</td>
                 @can('update', $task)
                     <td>
                         <a class="text-decoration-none" href="{{ route('tasks.edit', $task) }}">{{ __('Edit') }}</a>
@@ -78,6 +80,7 @@
         </tbody>
 
     </table>
+
     {{ $filter->links('pagination::bootstrap-4') }}
 
 @endsection
