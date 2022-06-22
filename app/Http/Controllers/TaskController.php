@@ -69,8 +69,7 @@ class TaskController extends Controller
         $userId = Auth::id();
         $user = User::find($userId);
         $status = TaskStatus::find($data['status_id']);
-        $assignedUser = User::find($data['assigned_to_id']);
-        $label = Label::find($data['labels'][0]);
+
 
         $task = new Task($data);
 
@@ -78,8 +77,14 @@ class TaskController extends Controller
         $task->status()->associate($status);
         $task->save();
 
-        $task->assignedUser()->associate($assignedUser);
-        $task->labels()->attach($label);
+        if (array_key_exists('assigned_to_id', $data)) {
+            $assignedUser = User::find($data['assigned_to_id']);
+            $task->assignedUser()->associate($assignedUser);
+        }
+        if (array_key_exists('labels', $data)) {
+            $label = Label::find($data['labels'][0]);
+            $task->labels()->attach($label);
+        }
         $task->save();
 
         flash(__('messages.task.created'));
