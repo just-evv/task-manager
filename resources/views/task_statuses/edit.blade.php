@@ -4,24 +4,13 @@
 
     <h1 class="mb-5">{{__('Edit status')}}</h1>
 
-    @if ($errors->any())
-        <div>
-            <ul>
-                @foreach ($errors->all() as $error)
-                    <span class="invalid-feedback" role="alert">
-                    <li>{{ $error }}</li>
-                @endforeach
-            </ul>
-        </div>
-    @endif
-    <div class="form-group">
-    {{ Form::model($status, ['route' => ['task_statuses.update', $status], 'method' => 'PATCH']) }}
-        <div class="form-group mb-3">
-    {{ Form::label('name', __('Name')) }}
-    <br>
-    {{ Form::text('name', $value = null , ['class' => 'form-control']) }}
-        </div>
-    {{ Form::submit(__('Edit-btn'), ['class' => 'btn btn-primary mt-3']) }}
+    {{ Form::model($status, ['route' => ['task_statuses.update', $status], 'method' => 'PATCH', 'class' => "form-group mb-3"]) }}
+        {{ Form::label('name', __('Name')) }}
+        <br>
+        {{ Form::text('name', $value = null , ['class' => 'form-control'. ($errors->has('name') ? ' is-invalid' : null)]) }}
+                @error('name')
+                <div class="invalid-feedback">{{ $message }}</div>
+                @enderror
+        {{ Form::submit(__('Update'), ['class' => 'btn btn-primary mt-3']) }}
     {{ Form::close() }}
-    </div>
 @endsection

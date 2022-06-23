@@ -54,7 +54,7 @@ class TaskTest extends TestCase
             'description' => 'description',
             'status_id' => $this->taskStatus->id,
             'assigned_to_id' => $assignedUser->id,
-            'labels' => [$label->id]
+            //'labels' => [$label->id]
         ];
         $this->actingAs($this->user)
             ->post(route('tasks.store', $newTask))
@@ -86,7 +86,6 @@ class TaskTest extends TestCase
             'description' => '',
             'status_id' => $task->status->id,
             'assigned_to_id' => $this->user->id,
-            'labels' => [[null]]
             ];
         $this->patch(route('tasks.update', $task), $request)
             ->assertRedirect(route('tasks.index'))
