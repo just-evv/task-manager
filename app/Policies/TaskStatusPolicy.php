@@ -6,6 +6,7 @@ use App\Models\TaskStatus;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Illuminate\Auth\Access\Response;
+use Illuminate\Support\Facades\Auth;
 
 class TaskStatusPolicy
 {
@@ -20,9 +21,7 @@ class TaskStatusPolicy
      */
     public function create(User $user): Response|bool
     {
-        if ($user) {
-            return true;
-        }
+        return Auth::check();
     }
 
     /**
@@ -34,9 +33,7 @@ class TaskStatusPolicy
      */
     public function update(User $user, TaskStatus $taskStatus): Response|bool
     {
-        if ($user) {
-            return true;
-        }
+        return Auth::check();
     }
 
     /**
@@ -48,8 +45,6 @@ class TaskStatusPolicy
      */
     public function delete(User $user, TaskStatus $taskStatus): Response|bool
     {
-        if ($user) {
-            return true;
-        }
+        return Auth::check();
     }
 }

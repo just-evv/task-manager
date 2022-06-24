@@ -6,6 +6,7 @@ use App\Models\Task;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Illuminate\Auth\Access\Response;
+use Illuminate\Support\Facades\Auth;
 
 class TaskPolicy
 {
@@ -19,9 +20,7 @@ class TaskPolicy
      */
     public function create(User $user): Response|bool
     {
-        if ($user) {
-            return true;
-        }
+        return Auth::check();
     }
 
     /**
@@ -33,9 +32,7 @@ class TaskPolicy
      */
     public function update(User $user, Task $task): Response|bool
     {
-        if ($user) {
-            return true;
-        }
+        return Auth::check();
     }
 
     /**
