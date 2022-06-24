@@ -6,6 +6,7 @@ use App\Models\Label;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 use Illuminate\Auth\Access\Response;
+use Illuminate\Support\Facades\Auth;
 
 class LabelPolicy
 {
@@ -19,9 +20,7 @@ class LabelPolicy
      */
     public function create(User $user): Response|bool
     {
-        if ($user) {
-            return true;
-        }
+        return Auth::check();
     }
 
     /**
@@ -33,9 +32,7 @@ class LabelPolicy
      */
     public function update(User $user, Label $label): Response|bool
     {
-        if ($user) {
-            return true;
-        }
+        return Auth::check();
     }
 
     /**
@@ -47,8 +44,6 @@ class LabelPolicy
      */
     public function delete(User $user, Label $label): Response|bool
     {
-        if ($user) {
-            return true;
-        }
+        return Auth::check();
     }
 }
