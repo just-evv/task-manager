@@ -101,7 +101,7 @@ class TaskStatusController extends Controller
      */
     public function destroy(TaskStatus $taskStatus): RedirectResponse
     {
-        $status = TaskStatus::find($taskStatus->id);
+        $status = TaskStatus::findOrFail($taskStatus->id);
         $tasks = $status->tasks()->get();
 
         if ($tasks->isEmpty()) {
