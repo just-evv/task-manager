@@ -97,6 +97,7 @@ class LabelController extends Controller
      */
     public function destroy(Label $label): RedirectResponse
     {
+        $this->authorize('delete', Label::class);
         $deletingLabel = Label::findOrFail($label->id);
         $tasks = $deletingLabel->tasks()->get();
 

@@ -11,7 +11,8 @@ class LabelTest extends TestCase
 {
     private object $user;
     private array $request;
-    private object $label;
+    private object $label1;
+    private object $label2;
 
     public function setUp(): void
     {
@@ -21,7 +22,8 @@ class LabelTest extends TestCase
             'name' => 'Label 1',
             'description' => 'Description 1'
         ];
-        $this->label = Label::factory()->create();
+        $this->label1 = Label::factory()->create();
+        $this->label2 = Label::factory()->has(Task::factory())->create();
     }
 
     /**
@@ -54,12 +56,12 @@ class LabelTest extends TestCase
      */
     public function testEditLabel()
     {
-        $this->get(route('labels.edit', $this->label))
+        $this->get(route('labels.edit', $this->label1))
             ->assertStatus(403);
         $this->actingAs($this->user)
-            ->get(route('labels.edit', $this->label))
+            ->get(route('labels.edit', $this->label1))
             ->assertOk()
-            ->assertSee($this->label->name);
+            ->assertSee($this->label1['name']);
     }
 
     /**
@@ -68,11 +70,11 @@ class LabelTest extends TestCase
      */
     public function testUpdateLabel()
     {
-        $this->patch(route('labels.update', $this->label), $this->request)
+        $this->patch(route('labels.update', $this->label1), $this->request)
             ->assertRedirect(route('labels.index'))
             ->assertSessionDoesntHaveErrors();
-        $updatedLabel = Label::findOrFail($this->label->id);
-        $this->assertEquals($this->request['name'], $updatedLabel->name);
+        $updatedLabel = Label::findOrFail($this->label1['id']);
+        $this->assertEquals($this->request['name'], $updatedLabel['name']);
     }
 
     /**
@@ -81,16 +83,17 @@ class LabelTest extends TestCase
      */
     public function testDestroyLabel()
     {
-        $this->delete(route('labels.destroy', $this->label))
-            ->assertRedirect(route('labels.index'));
-        $this->assertModelMissing($this->label);
+        $this->delete(route('labels.destroy', $this->label1))
+            ->assertStatus(403);
 
-        $label2 = Label::factory()->create();
-        $task = Task::factory()->create();
-        $task->labels()->attach($label2);
-        $task->save();
-        $this->delete(route('labels.destroy', $label2))
+        $this->actingAs($this->user)
+            ->delete(route('labels.destroy', $this->label1))
             ->assertRedirect(route('labels.index'));
-        $this->assertModelExists($label2);
+
+        $this->assertDatabaseMissing('labels', $this->label1->toArray());
+
+        $this->delete(route('labels.destroy', $this->label2))
+            ->assertRedirect(route('labels.index'));
+        $this->assertDatabaseHas('labels', $this->label2->toArray());
     }
 }
