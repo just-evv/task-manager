@@ -10,11 +10,18 @@ use Tests\TestCase;
 class LabelTest extends TestCase
 {
     private object $user;
+    private array $request;
+    private object $label;
 
     public function setUp(): void
     {
         parent::setUp();
         $this->user = User::factory()->create();
+        $this->request = [
+            'name' => 'Label 1',
+            'description' => 'Description 1'
+        ];
+        $this->label = Label::factory()->create();
     }
 
     /**
@@ -24,6 +31,9 @@ class LabelTest extends TestCase
     public function testCreateLabel()
     {
         $this->get(route('labels.create'))
+            ->assertStatus(403);
+        $this->actingAs($this->user)
+            ->get(route('labels.create'))
             ->assertOk();
     }
 
@@ -33,10 +43,9 @@ class LabelTest extends TestCase
      */
     public function testStoreLabel()
     {
-        $newLabel = ['name' => 'new label'];
-        $this->post(route('labels.store', $newLabel))
+        $this->post(route('labels.store', $this->request))
             ->assertRedirect(route('labels.index'));
-        $this->assertDatabaseHas('labels', $newLabel);
+        $this->assertDatabaseHas('labels', $this->request);
     }
 
     /**
@@ -45,10 +54,12 @@ class LabelTest extends TestCase
      */
     public function testEditLabel()
     {
-        $label = Label::factory()->create();
-        $this->get(route('labels.edit', $label))
+        $this->get(route('labels.edit', $this->label))
+            ->assertStatus(403);
+        $this->actingAs($this->user)
+            ->get(route('labels.edit', $this->label))
             ->assertOk()
-            ->assertSee('form');
+            ->assertSee($this->label->name);
     }
 
     /**
@@ -57,13 +68,11 @@ class LabelTest extends TestCase
      */
     public function testUpdateLabel()
     {
-        $label = Label::factory()->create();
-        $request = ['name' => 'new name', 'description' => ''];
-        $this->patch(route('labels.update', $label), $request)
+        $this->patch(route('labels.update', $this->label), $this->request)
             ->assertRedirect(route('labels.index'))
             ->assertSessionDoesntHaveErrors();
-        $updatedLabel = Label::findOrFail($label->id);
-        $this->assertEquals($request['name'], $updatedLabel->name);
+        $updatedLabel = Label::findOrFail($this->label->id);
+        $this->assertEquals($this->request['name'], $updatedLabel->name);
     }
 
     /**
@@ -72,11 +81,9 @@ class LabelTest extends TestCase
      */
     public function testDestroyLabel()
     {
-        $label1 = Label::factory()->create();
-        $this->assertModelExists($label1);
-        $this->delete(route('labels.destroy', $label1))
+        $this->delete(route('labels.destroy', $this->label))
             ->assertRedirect(route('labels.index'));
-        $this->assertModelMissing($label1);
+        $this->assertModelMissing($this->label);
 
         $label2 = Label::factory()->create();
         $task = Task::factory()->create();
