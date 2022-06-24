@@ -25,7 +25,7 @@
                 <td>{{ $label->name }}</td>
                 <td>{{ $label->description ?? '' }}</td>
                 <td>{{ $label->created_at->toDateString() }}</td>
-                @canany(['update', 'delete'], $label)
+                @canany(['edit', 'delete'], $label)
                     <td>
                         <a class="text-decoration-none" href="{{ route('labels.edit', $label) }}">{{__('Edit')}}</a>
                         <a class="text-danger text-decoration-none"

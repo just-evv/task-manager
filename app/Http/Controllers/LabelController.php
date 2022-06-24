@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreLabelRequest;
 use App\Http\Requests\UpdateLabelRequest;
 use App\Models\Label;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -29,9 +30,11 @@ class LabelController extends Controller
      * Show the form for creating a new resource.
      *
      * @return Application|Factory|View
+     * @throws AuthorizationException
      */
-    public function create(): Application|Factory|View
+    public function create(Request $request): Application|Factory|View
     {
+        $this->authorize('create', Label::class);
         $label = new Label();
         return view('labels.create', compact('label'));
     }
@@ -61,6 +64,7 @@ class LabelController extends Controller
      */
     public function edit(Label $label): Application|Factory|View
     {
+        $this->authorize('edit', Label::class);
         $label = Label::findOrFail($label->id);
         return view('labels.edit', compact('label'));
     }

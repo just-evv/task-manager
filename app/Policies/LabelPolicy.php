@@ -30,7 +30,7 @@ class LabelPolicy
      * @param Label $label
      * @return Response|bool
      */
-    public function update(User $user, Label $label): Response|bool
+    public function edit(User $user,): Response|bool
     {
         return Auth::check();
     }
