@@ -27,7 +27,6 @@ class LabelPolicy
      * Determine whether the user can update the model.
      *
      * @param User $user
-     * @param Label $label
      * @return Response|bool
      */
     public function edit(User $user): Response|bool
@@ -39,7 +38,6 @@ class LabelPolicy
      * Determine whether the user can delete the model.
      *
      * @param User $user
-     * @param Label $label
      * @return Response|bool
      */
     public function delete(User $user): Response|bool

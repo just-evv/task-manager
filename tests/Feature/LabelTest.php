@@ -22,7 +22,8 @@ class LabelTest extends TestCase
             'name' => 'Label 1',
             'description' => 'Description 1'
         ];
-        $this->label1 = Label::factory()->create();
+        $this->label1 = new Label(['name' => 'New Label', 'description' => 'random']);
+        $this->label1->save();
         $this->label2 = Label::factory()->has(Task::factory())->create();
     }
 
