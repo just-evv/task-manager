@@ -49,7 +49,7 @@ class LabelTest extends TestCase
         $this->followingRedirects()
             ->post(route('labels.store', $this->request))
             ->assertOk()
-            ->assertSee(__('messages.label.created'));
+            ->assertSee($this->request);
         $this->assertDatabaseHas('labels', $this->request);
     }
 
@@ -76,8 +76,6 @@ class LabelTest extends TestCase
             ->patch(route('labels.update', $this->label1), $this->request)
             ->assertOk()
             ->assertSessionDoesntHaveErrors()
-            ->assertSee(__('messages.label.updated'));
-        $this->get(route('labels.index'))
             ->assertSee($this->request);
     }
 
@@ -94,14 +92,14 @@ class LabelTest extends TestCase
             ->actingAs($this->user)
             ->delete(route('labels.destroy', $this->label1))
             ->assertOk()
-            ->assertSee(__('messages.label.deleted'));
+            ->assertSee('Метка успешно удалена');
 
         $this->assertModelMissing($this->label1);
 
         $this->followingRedirects()
             ->delete(route('labels.destroy', $this->label2))
             ->assertOk()
-            ->assertSee(__('messages.label.unsuccessful'));
+            ->assertSee('Не удалось удалить метку');
 
         $this->assertModelExists($this->label2);
     }
