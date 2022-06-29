@@ -5,14 +5,15 @@ namespace Tests\Feature;
 use App\Models\Label;
 use App\Models\Task;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Model;
 use Tests\TestCase;
 
 class LabelTest extends TestCase
 {
-    private object $user;
+    private model $user;
     private array $request;
-    private object $label1;
-    private object $label2;
+    private model $label1;
+    private model $label2;
 
     public function setUp(): void
     {
@@ -95,6 +96,7 @@ class LabelTest extends TestCase
             ->assertRedirect(route('labels.index'));
         $this->get(route('labels.index'))
             ->assertDontSee($name);
+        $this->assertModelMissing($this->label1);
 
         $this->followingRedirects()
             ->delete(route('labels.destroy', $this->label2))
