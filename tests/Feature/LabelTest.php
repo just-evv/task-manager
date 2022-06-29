@@ -25,7 +25,6 @@ class LabelTest extends TestCase
         ];
         $this->label1 = Label::factory()->createOne();
         $this->label2 = Label::factory()->has(Task::factory())->createOne();
-        //$label3 = Label::factory()->makeOne();
     }
 
     /**
@@ -47,8 +46,10 @@ class LabelTest extends TestCase
      */
     public function testStoreLabel()
     {
-        $this->post(route('labels.store', $this->request))
-            ->assertRedirect(route('labels.index'));
+        $this->followingRedirects()
+            ->post(route('labels.store', $this->request))
+            ->assertOk()
+            ->assertSee(__('messages.label.created'));
         $this->assertDatabaseHas('labels', $this->request);
     }
 
@@ -71,9 +72,11 @@ class LabelTest extends TestCase
      */
     public function testUpdateLabel()
     {
-        $this->patch(route('labels.update', $this->label1), $this->request)
-            ->assertRedirect(route('labels.index'))
-            ->assertSessionDoesntHaveErrors();
+        $this->followingRedirects()
+            ->patch(route('labels.update', $this->label1), $this->request)
+            ->assertOk()
+            ->assertSessionDoesntHaveErrors()
+            ->assertSee(__('messages.label.updated'));
         $this->get(route('labels.index'))
             ->assertSee($this->request);
     }
@@ -86,22 +89,20 @@ class LabelTest extends TestCase
     {
         $this->delete(route('labels.destroy', $this->label1))
             ->assertStatus(403);
-/*
-        $label = new Label(['name' => 'name 1']);
-        $label->save();
-        $name = $label->name;
-*/      //$lab1Arr = $this->label1->toArray();
-        //$name = $lab1Arr['name'];
-        $this->actingAs($this->user)
+
+        $this->followingRedirects()
+            ->actingAs($this->user)
             ->delete(route('labels.destroy', $this->label1))
-            ->assertRedirect(route('labels.index'));
-        //$this->get(route('labels.index'))
-        //    ->assertDontSee($name);
+            ->assertOk()
+            ->assertSee(__('messages.label.deleted'));
+
         $this->assertModelMissing($this->label1);
 
         $this->followingRedirects()
             ->delete(route('labels.destroy', $this->label2))
             ->assertOk()
-            ->assertSee('Не удалось удалить метку');
+            ->assertSee(__('messages.label.unsuccessful'));
+
+        $this->assertModelExists($this->label2);
     }
 }
