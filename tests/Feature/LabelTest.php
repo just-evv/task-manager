@@ -22,8 +22,7 @@ class LabelTest extends TestCase
             'name' => 'Label 1',
             'description' => 'Description 1'
         ];
-        $this->label1 = new Label(['name' => 'New Label', 'description' => 'random']);
-        $this->label1->save();
+        $this->label1 = Label::factory()->create();
         $this->label2 = Label::factory()->has(Task::factory())->create();
     }
 
@@ -61,8 +60,7 @@ class LabelTest extends TestCase
             ->assertStatus(403);
         $this->actingAs($this->user)
             ->get(route('labels.edit', $this->label1))
-            ->assertOk()
-            ->assertSee($this->label1['name']);
+            ->assertOk();
     }
 
     /**
@@ -74,8 +72,8 @@ class LabelTest extends TestCase
         $this->patch(route('labels.update', $this->label1), $this->request)
             ->assertRedirect(route('labels.index'))
             ->assertSessionDoesntHaveErrors();
-        $updatedLabel = Label::findOrFail($this->label1['id']);
-        $this->assertEquals($this->request['name'], $updatedLabel['name']);
+        $this->get(route('labels.index'))
+            ->assertSee($this->request);
     }
 
     /**
@@ -90,11 +88,12 @@ class LabelTest extends TestCase
         $this->actingAs($this->user)
             ->delete(route('labels.destroy', $this->label1))
             ->assertRedirect(route('labels.index'));
+        $this->get(route('labels.index'))
+            ->assertDontSee($this->label1);
 
-        $this->assertDatabaseMissing('labels', $this->label1->toArray());
-
-        $this->delete(route('labels.destroy', $this->label2))
-            ->assertRedirect(route('labels.index'));
-        $this->assertDatabaseHas('labels', $this->label2->toArray());
+        $this->followingRedirects()
+            ->delete(route('labels.destroy', $this->label2))
+            ->assertOk()
+            ->assertSee('Не удалось удалить метку');
     }
 }
