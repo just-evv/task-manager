@@ -84,12 +84,14 @@ class LabelTest extends TestCase
     {
         $this->delete(route('labels.destroy', $this->label1))
             ->assertStatus(403);
+/*
         $label = new Label(['name' => 'name 1']);
         $label->save();
         $name = $label->name;
-
+*/      $lab1Arr = $this->label1->toArray();
+    $name = $lab1Arr['name'];
         $this->actingAs($this->user)
-            ->delete(route('labels.destroy', $label))
+            ->delete(route('labels.destroy', $this->label1))
             ->assertRedirect(route('labels.index'));
         $this->get(route('labels.index'))
             ->assertDontSee($name);
@@ -98,5 +100,7 @@ class LabelTest extends TestCase
             ->delete(route('labels.destroy', $this->label2))
             ->assertOk()
             ->assertSee('Не удалось удалить метку');
+
+
     }
 }
