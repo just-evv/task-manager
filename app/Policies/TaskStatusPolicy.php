@@ -23,6 +23,17 @@ class TaskStatusPolicy
     {
         return Auth::check();
     }
+    /**
+     * Determine whether the user can accesses the edit model page.
+     *
+     * @param User $user
+     * @param TaskStatus $taskStatus
+     * @return Response|bool
+     */
+    public function edit(User $user): Response|bool
+    {
+        return Auth::check();
+    }
 
     /**
      * Determine whether the user can update the model.
@@ -31,7 +42,7 @@ class TaskStatusPolicy
      * @param TaskStatus $taskStatus
      * @return Response|bool
      */
-    public function update(User $user, TaskStatus $taskStatus): Response|bool
+    public function update(User $user): Response|bool
     {
         return Auth::check();
     }
@@ -43,7 +54,7 @@ class TaskStatusPolicy
      * @param TaskStatus $taskStatus
      * @return Response|bool
      */
-    public function delete(User $user, TaskStatus $taskStatus): Response|bool
+    public function delete(User $user): Response|bool
     {
         return Auth::check();
     }

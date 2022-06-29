@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\TaskStatus;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -29,9 +30,11 @@ class TaskStatusController extends Controller
      * Show the form for creating a new resource.
      *
      * @return Application|Factory|View
+     * @throws AuthorizationException
      */
     public function create(): View|Factory|Application
     {
+        $this->authorize('create', TaskStatus::class);
         $taskStatus = new TaskStatus();
         return view('task_statuses.create', compact('taskStatus'));
     }
@@ -66,6 +69,7 @@ class TaskStatusController extends Controller
      */
     public function edit(TaskStatus $taskStatus): View|Factory|Application
     {
+        $this->authorize('edit', TaskStatus::class);
         $status = TaskStatus::findOrFail($taskStatus->id);
         return view('task_statuses.edit', compact('status'));
     }
@@ -79,6 +83,7 @@ class TaskStatusController extends Controller
      */
     public function update(Request $request, TaskStatus $taskStatus): RedirectResponse
     {
+        $this->authorize('update', TaskStatus::class);
         $status = TaskStatus::findOrFail($taskStatus->id);
         $messages = ['unique' => __('validation.status.unique')];
 
@@ -101,6 +106,7 @@ class TaskStatusController extends Controller
      */
     public function destroy(TaskStatus $taskStatus): RedirectResponse
     {
+        $this->authorize('delete', TaskStatus::class);
         $status = TaskStatus::findOrFail($taskStatus->id);
         $tasks = $status->tasks()->get();
 

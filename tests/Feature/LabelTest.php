@@ -97,6 +97,7 @@ class LabelTest extends TestCase
         $this->assertModelMissing($this->label1);
 
         $this->followingRedirects()
+            ->actingAs($this->user)
             ->delete(route('labels.destroy', $this->label2))
             ->assertOk()
             ->assertSee('Не удалось удалить метку');
