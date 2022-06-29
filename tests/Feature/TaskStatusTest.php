@@ -14,8 +14,7 @@ class TaskStatusTest extends TestCase
 {
     private object $user;
     private array $request;
-    private Model $taskStatus;
-    private Model $assignedTaskStatus;
+    private mixed $taskStatus;
     private Model $task;
 
     public function setUp(): void
@@ -25,7 +24,6 @@ class TaskStatusTest extends TestCase
         $this->request = ['name' => 'Testing Status'];
         $this->taskStatus = TaskStatus::factory()->createOne();
         $this->task = Task::factory()->createOne();
-        $this->assignedTaskStatus = $this->task->status;
     }
 
     /**
@@ -107,17 +105,18 @@ class TaskStatusTest extends TestCase
      */
     public function testDestroyStatusAssigned()
     {
-        $this->assertModelExists($this->assignedTaskStatus);
+        $assignedTaskStatus = $this->task->status;
+        $this->assertModelExists($assignedTaskStatus);
 
-        $this->delete(route('task_statuses.destroy', $this->assignedTaskStatus))
+        $this->delete(route('task_statuses.destroy', $assignedTaskStatus))
             ->assertStatus(403);
 
         $this->followingRedirects()
             ->actingAs($this->user)
-            ->delete(route('task_statuses.destroy', $this->assignedTaskStatus))
+            ->delete(route('task_statuses.destroy', $assignedTaskStatus))
             ->assertOk()
             ->assertSee('Не удалось удалить статус');
 
-        $this->assertModelExists($this->assignedTaskStatus);
+        $this->assertModelExists($assignedTaskStatus);
     }
 }

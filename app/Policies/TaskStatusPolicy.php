@@ -27,7 +27,6 @@ class TaskStatusPolicy
      * Determine whether the user can accesses the edit model page.
      *
      * @param User $user
-     * @param TaskStatus $taskStatus
      * @return Response|bool
      */
     public function edit(User $user): Response|bool
@@ -39,7 +38,6 @@ class TaskStatusPolicy
      * Determine whether the user can update the model.
      *
      * @param User $user
-     * @param TaskStatus $taskStatus
      * @return Response|bool
      */
     public function update(User $user): Response|bool
@@ -51,7 +49,6 @@ class TaskStatusPolicy
      * Determine whether the user can delete the model.
      *
      * @param User $user
-     * @param TaskStatus $taskStatus
      * @return Response|bool
      */
     public function delete(User $user): Response|bool
