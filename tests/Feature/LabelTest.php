@@ -84,9 +84,12 @@ class LabelTest extends TestCase
     {
         $this->delete(route('labels.destroy', $this->label1))
             ->assertStatus(403);
-        $name = $this->label1->name;
+        $label = new Label(['name' => 'name 1']);
+        $label->save();
+        $name = $label->name;
+
         $this->actingAs($this->user)
-            ->delete(route('labels.destroy', $this->label1))
+            ->delete(route('labels.destroy', $label))
             ->assertRedirect(route('labels.index'));
         $this->get(route('labels.index'))
             ->assertDontSee($name);
