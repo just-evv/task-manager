@@ -15,7 +15,7 @@ class Label extends Model
      *
      * @var array<string>
      */
-    protected $fillable = [
+    public $fillable = [
         'name',
         'description',
     ];

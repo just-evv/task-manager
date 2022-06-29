@@ -84,12 +84,12 @@ class LabelTest extends TestCase
     {
         $this->delete(route('labels.destroy', $this->label1))
             ->assertStatus(403);
-
+        $name = $this->label1->name;
         $this->actingAs($this->user)
             ->delete(route('labels.destroy', $this->label1))
             ->assertRedirect(route('labels.index'));
         $this->get(route('labels.index'))
-            ->assertDontSee($this->label1);
+            ->assertDontSee($name);
 
         $this->followingRedirects()
             ->delete(route('labels.destroy', $this->label2))
