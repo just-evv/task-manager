@@ -18,13 +18,14 @@ class LabelTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->user = User::factory()->create();
+        $this->user = User::factory()->createOne();
         $this->request = [
             'name' => 'Label 1',
             'description' => 'Description 1'
         ];
-        $this->label1 = Label::factory()->create();
-        $this->label2 = Label::factory()->has(Task::factory())->create();
+        $this->label1 = Label::factory()->createOne();
+        $this->label2 = Label::factory()->has(Task::factory())->createOne();
+        //$label3 = Label::factory()->makeOne();
     }
 
     /**
@@ -89,13 +90,13 @@ class LabelTest extends TestCase
         $label = new Label(['name' => 'name 1']);
         $label->save();
         $name = $label->name;
-*/      $lab1Arr = $this->label1->toArray();
-        $name = $lab1Arr['name'];
+*/      //$lab1Arr = $this->label1->toArray();
+        //$name = $lab1Arr['name'];
         $this->actingAs($this->user)
             ->delete(route('labels.destroy', $this->label1))
             ->assertRedirect(route('labels.index'));
-        $this->get(route('labels.index'))
-            ->assertDontSee($name);
+        //$this->get(route('labels.index'))
+        //    ->assertDontSee($name);
         $this->assertModelMissing($this->label1);
 
         $this->followingRedirects()
