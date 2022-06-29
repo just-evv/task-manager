@@ -10,10 +10,10 @@ use Tests\TestCase;
 
 class LabelTest extends TestCase
 {
-    private model $user;
+    private Model $user;
     private array $request;
-    private model $label1;
-    private model $label2;
+    private Model $label1;
+    private Model $label2;
 
     public function setUp(): void
     {
