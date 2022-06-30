@@ -14,8 +14,8 @@ class TaskStatusTest extends TestCase
 {
     private object $user;
     private array $request;
-    private mixed $taskStatus;
-    private Model $task;
+    private Model $taskStatus;
+    private mixed $task;
 
     public function setUp(): void
     {
@@ -78,8 +78,9 @@ class TaskStatusTest extends TestCase
             ->patch(route('task_statuses.update', $this->taskStatus), $this->request)
             ->assertRedirect(route('task_statuses.index'))
             ->assertSessionDoesntHaveErrors();
-        $updatedStatus = DB::table('task_statuses')->find($this->taskStatus->id);
-        $this->assertEquals($this->request['name'], $updatedStatus->name);
+        $this->get(route('task_statuses.index'))
+            ->assertSee($this->request);
+        $this->assertDatabaseHas('task_statuses', $this->request);
     }
 
     /**
