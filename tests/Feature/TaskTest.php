@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
 /**
- * @property \Illuminate\Database\Eloquent\Model|\App\Models\Task $task
+ * @property Model|Task $task
  */
 class TaskTest extends TestCase
 {
