@@ -13,7 +13,7 @@ use Tests\TestCase;
 class TaskTest extends TestCase
 {
     private Model $user;
-    private Model $task;
+    private mixed $task;
     private array $request;
 
     public function setUp(): void
