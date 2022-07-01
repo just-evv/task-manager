@@ -5,23 +5,26 @@ namespace Tests\Feature;
 use App\Models\Label;
 use App\Models\Task;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Model;
 use Tests\TestCase;
 
 class LabelTest extends TestCase
 {
-    private object $user;
+    private Model $user;
+    private array $request;
+    private Model $label1;
+    private Model $label2;
 
     public function setUp(): void
     {
         parent::setUp();
-        $this->user = User::factory()->create();
-    }
-
-    public function testSeeAsUser()
-    {
-        $this->actingAs($this->user)
-            ->get(route('labels.index'))
-            ->assertSee(['Create', 'Action']);
+        $this->user = User::factory()->createOne();
+        $this->request = [
+            'name' => 'Label 1',
+            'description' => 'Description 1'
+        ];
+        $this->label1 = Label::factory()->createOne();
+        $this->label2 = Label::factory()->has(Task::factory())->createOne();
     }
 
     /**
@@ -31,6 +34,9 @@ class LabelTest extends TestCase
     public function testCreateLabel()
     {
         $this->get(route('labels.create'))
+            ->assertStatus(403);
+        $this->actingAs($this->user)
+            ->get(route('labels.create'))
             ->assertOk();
     }
 
@@ -40,10 +46,11 @@ class LabelTest extends TestCase
      */
     public function testStoreLabel()
     {
-        $newLabel = ['name' => 'new label'];
-        $this->post(route('labels.store', $newLabel))
-            ->assertRedirect(route('labels.index'));
-        $this->assertDatabaseHas('labels', $newLabel);
+        $this->followingRedirects()
+            ->post(route('labels.store', $this->request))
+            ->assertOk()
+            ->assertSee($this->request);
+        $this->assertDatabaseHas('labels', $this->request);
     }
 
     /**
@@ -52,10 +59,11 @@ class LabelTest extends TestCase
      */
     public function testEditLabel()
     {
-        $label = Label::factory()->create();
-        $this->get(route('labels.edit', $label))
-            ->assertOk()
-            ->assertSee('form');
+        $this->get(route('labels.edit', $this->label1))
+            ->assertStatus(403);
+        $this->actingAs($this->user)
+            ->get(route('labels.edit', $this->label1))
+            ->assertOk();
     }
 
     /**
@@ -64,13 +72,11 @@ class LabelTest extends TestCase
      */
     public function testUpdateLabel()
     {
-        $label = Label::factory()->create();
-        $request = ['name' => 'new name', 'description' => ''];
-        $this->patch(route('labels.update', $label), $request)
-            ->assertRedirect(route('labels.index'))
-            ->assertSessionDoesntHaveErrors();
-        $updatedLabel = Label::findOrFail($label->id);
-        $this->assertEquals($request['name'], $updatedLabel->name);
+        $this->followingRedirects()
+            ->patch(route('labels.update', $this->label1), $this->request)
+            ->assertOk()
+            ->assertSessionDoesntHaveErrors()
+            ->assertSee($this->request);
     }
 
     /**
@@ -79,18 +85,23 @@ class LabelTest extends TestCase
      */
     public function testDestroyLabel()
     {
-        $label1 = Label::factory()->create();
-        $this->assertModelExists($label1);
-        $this->delete(route('labels.destroy', $label1))
-            ->assertRedirect(route('labels.index'));
-        $this->assertModelMissing($label1);
+        $this->delete(route('labels.destroy', $this->label1))
+            ->assertStatus(403);
 
-        $label2 = Label::factory()->create();
-        $task = Task::factory()->create();
-        $task->labels()->attach($label2);
-        $task->save();
-        $this->delete(route('labels.destroy', $label2))
-            ->assertRedirect(route('labels.index'));
-        $this->assertModelExists($label2);
+        $this->followingRedirects()
+            ->actingAs($this->user)
+            ->delete(route('labels.destroy', $this->label1))
+            ->assertOk()
+            ->assertSee('Метка успешно удалена');
+
+        $this->assertModelMissing($this->label1);
+
+        $this->followingRedirects()
+            ->actingAs($this->user)
+            ->delete(route('labels.destroy', $this->label2))
+            ->assertOk()
+            ->assertSee('Не удалось удалить метку');
+
+        $this->assertModelExists($this->label2);
     }
 }

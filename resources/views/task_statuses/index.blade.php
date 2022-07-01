@@ -4,16 +4,16 @@
     @include('flash::message')
     <h1 class="mb-5">Statuses</h1>
     @can('create', App\Models\TaskStatus::class)
-    <a href="{{ route('task_statuses.create') }}" class="btn btn-primary">Create new status</a>
+    <a href="{{ route('task_statuses.create') }}" class="btn btn-primary">{{__('Create new status')}}</a>
     @endcan
     <table class="table me-2">
         <thead>
         <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Created at</th>
+            <th>{{__('ID')}}</th>
+            <th>{{__('Name')}}</th>
+            <th>{{__('Created at')}}</th>
             @can('create', App\Models\TaskStatus::class)
-            <th>Action</th>
+            <th>{{__('Action')}}</th>
             @endcan
         </tr>
         </thead>
@@ -25,13 +25,13 @@
             <td>{{ $status->created_at->toDateString() }}</td>
             @canany(['update', 'delete'], $status)
             <td>
-                <a class="text-decoration-none" href="{{ route('task_statuses.edit', $status) }}">Update</a>
+                <a class="text-decoration-none" href="{{ route('task_statuses.edit', $status) }}">{{__('Edit')}}</a>
                 <a class="text-danger text-decoration-none"
                    href="{{ route('task_statuses.destroy', $status) }}"
-                   data-confirm="Are you sure?"
+                   data-confirm="{{ __("Are you sure?") }}"
                    data-method="delete"
                    rel="nofollow">
-                    Delete
+                    {{__('Delete')}}
                 </a>
             </td>
             @endcanany

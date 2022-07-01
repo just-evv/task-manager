@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreTaskRequest;
+use App\Http\Requests\UpdateTaskRequest;
 use App\Models\Label;
 use App\Models\Task;
 use App\Models\TaskStatus;
@@ -27,15 +29,16 @@ class TaskController extends Controller
     {
         $statuses = TaskStatus::pluck('name', 'id');
         $users = User::pluck('name', 'id');
+        $tasks = Task::all();
 
         $filter = QueryBuilder::for(Task::class)
             ->allowedFilters([
                 AllowedFilter::exact('status_id'),
                 AllowedFilter::exact('created_by_id'),
                 AllowedFilter::exact('assigned_to_id')])
-            ->paginate();
+            ->paginate(15);
 
-        return view('tasks.index', compact('filter', 'statuses', 'users'));
+        return view('tasks.index', compact('filter', 'statuses', 'users', 'tasks'));
     }
 
     /**
@@ -45,6 +48,7 @@ class TaskController extends Controller
      */
     public function create(): View|Factory|Application
     {
+        $this->authorize('create', Task::class);
         $task = new Task();
         $statuses = TaskStatus::pluck('name', 'id');
         $users = User::pluck('name', 'id');
@@ -56,38 +60,35 @@ class TaskController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param Request $request
+     * @param StoreTaskRequest $request
      * @throws ValidationException
      */
-    public function store(Request $request): RedirectResponse
+    public function store(StoreTaskRequest $request): RedirectResponse
     {
-        if ($request->user()->cannot('create', Task::class)) {
-            abort(403);
-        }
-        $data = $this->validate($request, [
-            'name' => 'required|unique:tasks',
-            'description' => 'nullable|max:255',
-            'status_id' => 'required',
-            'assigned_to_id' => 'nullable',
-        ]);
+        $data = $request->validated();
 
         $userId = Auth::id();
         $user = User::find($userId);
         $status = TaskStatus::find($data['status_id']);
-        $assignedUser = User::find($data['assigned_to_id']);
 
-        $newTask = new Task($data);
 
-        $newTask->creator()->associate($user);
-        $newTask->status()->associate($status);
-        $newTask->assignedUser()->associate($assignedUser);
-        $newTask->save();
+        $task = new Task($data);
 
-        $newTask->labels()->attach($request->labels);
-        $newTask->save();
+        $task->creator()->associate($user);
+        $task->status()->associate($status);
+        $task->save();
 
-        flash(__('messages.created', ['name' => 'task']));
+        if (array_key_exists('assigned_to_id', $data)) {
+            $assignedUser = User::find($data['assigned_to_id']);
+            $task->assignedUser()->associate($assignedUser);
+        }
+        if (array_key_exists('labels', $data)) {
+            $label = Label::find($data['labels'][0]);
+            $task->labels()->attach($label);
+        }
+        $task->save();
 
+        flash(__('messages.task.created'));
         return redirect()->route('tasks.index');
     }
 
@@ -111,39 +112,43 @@ class TaskController extends Controller
      */
     public function edit(Task $task): View|Factory|Application
     {
+        $this->authorize('edit', Task::class);
         $task = Task::findOrFail($task->id);
         $statuses = TaskStatus::pluck('name', 'id');
         $allUsers = User::pluck('name', 'id');
-        return view('tasks.edit', compact(['task', 'statuses', 'allUsers']));
+        $labels = Label::pluck('name', 'id');
+        return view('tasks.edit', compact(['task', 'statuses', 'allUsers', 'labels']));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param Request $request
+     * @param UpdateTaskRequest $request
      * @param Task $task
      * @return RedirectResponse
      */
-    public function update(Request $request, Task $task): RedirectResponse
+    public function update(UpdateTaskRequest $request, Task $task): RedirectResponse
     {
-
+        $this->authorize('update', Task::class);
         $task = Task::findOrFail($task->id);
-        $data = $this->validate($request, [
-            'name' => 'required|unique:tasks,name,' . $task->id,
-            'description' => 'nullable|max:255',
-            'status_id' => 'required',
-            'assigned_to_id' => 'nullable'
-        ]);
+        $data = $request->validated();
 
         $task->fill($data);
-        $status = TaskStatus::find($data['status_id']);
-        $assignedUser = User::find($data['assigned_to_id']);
-        $task->status()->associate($status);
-        $task->assignedUser()->associate($assignedUser);
 
+        $status = TaskStatus::find($data['status_id']);
+
+        $task->status()->associate($status);
+        if (array_key_exists('assigned_to_id', $data)) {
+            $assignedUser = User::find($data['assigned_to_id']);
+            $task->assignedUser()->associate($assignedUser);
+        }
+        if (array_key_exists('labels', $data)) {
+            $label = Label::find($data['labels'][0]);
+            $task->labels()->attach($label);
+        }
         $task->save();
 
-        flash(__('messages.updated', ['name' => 'task']));
+        flash(__('messages.task.updated'));
 
         return redirect()->route('tasks.index');
     }
@@ -156,9 +161,11 @@ class TaskController extends Controller
      */
     public function destroy(Request $request, Task $task): RedirectResponse
     {
+        $this->authorize('delete', $task);
         $task = Task::findOrFail($task->id);
+        $task->labels()->detach();
         $task->delete();
-        flash(__('messages.deleted', ['name' => 'task']));
+        flash(__('messages.task.deleted'));
         return redirect()->route('tasks.index');
     }
 }

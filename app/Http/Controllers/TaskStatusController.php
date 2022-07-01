@@ -3,12 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\TaskStatus;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 
 class TaskStatusController extends Controller
@@ -28,9 +30,11 @@ class TaskStatusController extends Controller
      * Show the form for creating a new resource.
      *
      * @return Application|Factory|View
+     * @throws AuthorizationException
      */
     public function create(): View|Factory|Application
     {
+        $this->authorize('create', TaskStatus::class);
         $taskStatus = new TaskStatus();
         return view('task_statuses.create', compact('taskStatus'));
     }
@@ -44,14 +48,15 @@ class TaskStatusController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+        $messages = ['unique' => __('validation.status.unique')];
         $data = $this->validate($request, [
             'name' => 'required|unique:task_statuses'
-        ]);
+        ], $messages);
 
         $newStatus = new TaskStatus($data);
         $newStatus->save();
 
-        flash(__('messages.created', ['name' => 'task status']));
+        flash(__('messages.status.created'));
 
         return redirect()->route('task_statuses.index');
     }
@@ -64,6 +69,7 @@ class TaskStatusController extends Controller
      */
     public function edit(TaskStatus $taskStatus): View|Factory|Application
     {
+        $this->authorize('edit', TaskStatus::class);
         $status = TaskStatus::findOrFail($taskStatus->id);
         return view('task_statuses.edit', compact('status'));
     }
@@ -77,16 +83,17 @@ class TaskStatusController extends Controller
      */
     public function update(Request $request, TaskStatus $taskStatus): RedirectResponse
     {
+        $this->authorize('update', TaskStatus::class);
         $status = TaskStatus::findOrFail($taskStatus->id);
+        $messages = ['unique' => __('validation.status.unique')];
+
         $data = $this->validate($request, [
-
-            'name' => 'required|unique:task_statuses,name,' . $status->id,
-        ]);
-
+            'name' => ['required', Rule::unique('task_statuses')->ignore($status)]
+        ], $messages);
         $status->fill($data);
         $status->save();
 
-        flash(__('messages.updated', ['name' => 'task status']));
+        flash(__('messages.status.updated'));
 
         return redirect()->route('task_statuses.index');
     }
@@ -99,16 +106,17 @@ class TaskStatusController extends Controller
      */
     public function destroy(TaskStatus $taskStatus): RedirectResponse
     {
-        $status = TaskStatus::find($taskStatus->id);
+        $this->authorize('delete', TaskStatus::class);
+        $status = TaskStatus::findOrFail($taskStatus->id);
         $tasks = $status->tasks()->get();
 
         if ($tasks->isEmpty()) {
             $status->delete();
-            flash(__('messages.deleted', ['name' => 'task status']));
+            flash(__('messages.status.deleted'));
             return redirect()->route('task_statuses.index');
         }
 
-         flash(__('messages.unsuccessful', ['name' => 'task status']))->warning();
+         flash(__('messages.status.unsuccessful'))->warning();
          return redirect()->route('task_statuses.index');
     }
 }

@@ -30,5 +30,3 @@ Route::resource('tasks', TaskController::class);
 Route::resource('labels', LabelController::class)->except(['show']);
 
 Auth::routes();
-
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

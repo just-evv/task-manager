@@ -4,6 +4,9 @@ up:
 down:
 	./vendor/bin/sail down
 
+restart:
+	./vendor/bin/sail restart
+
 test:
 	./vendor/bin/sail test
 
@@ -18,11 +21,11 @@ deploy:
 
 setup:
 	composer install
+	composer update
 	cp -n .env.example .env|| true
 	php artisan key:gen --ansi
 	./vendor/bin/sail up -d
 	./vendor/bin/sail artisan migrate
-	npm install
 
 test-coverage:
 	./vendor/bin/sail artisan db:seed

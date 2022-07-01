@@ -25,7 +25,7 @@
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">
                 <a class="navbar-brand" href="{{ url('/') }}">
-                    {{ config('app.name', 'Laravel') }}
+                    {{  __('Task Manager') }}
                 </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                     <span class="navbar-toggler-icon"></span>
@@ -36,15 +36,15 @@
                     <ul class="navbar-nav me-auto">
                         <li class="nav-item">
                             <a class="nav-link " href="{{ route('tasks.index') }}">
-                                Tasks                            </a>
+                                {{__('Tasks')}}                            </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link " href="{{ route('task_statuses.index') }}">
-                                Statuses                            </a>
+                                {{__('Statuses')}}                            </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link " href="{{ route('labels.index') }}">
-                                Labels                            </a>
+                                {{__('Labels')}}                            </a>
                         </li>
 
                     </ul>

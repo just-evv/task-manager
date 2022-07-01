@@ -12,7 +12,15 @@ return [
     | as the size rules. Feel free to tweak each of these messages here.
     |
     */
-
+    'task' => [
+        'unique' =>  'Task this this name already exists',
+    ],
+    'label' => [
+        'unique' =>  'Label this this name already exists',
+    ],
+    'status' => [
+        'unique' =>  'Status this this name already exists',
+    ],
     'accepted' => 'The :attribute must be accepted.',
     'accepted_if' => 'The :attribute must be accepted when :other is :value.',
     'active_url' => 'The :attribute is not a valid URL.',
@@ -100,7 +108,10 @@ return [
     'not_in' => 'The selected :attribute is invalid.',
     'not_regex' => 'The :attribute format is invalid.',
     'numeric' => 'The :attribute must be a number.',
-    'password' => 'The password is incorrect.',
+    'password' => [
+        'wrong' => 'The password is incorrect.',
+        'min' => 'The password must be at least :min characters long',
+        'confirmed' => ''],
     'present' => 'The :attribute field must be present.',
     'prohibited' => 'The :attribute field is prohibited.',
     'prohibited_if' => 'The :attribute field is prohibited when :other is :value.',

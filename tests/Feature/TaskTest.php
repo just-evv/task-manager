@@ -6,19 +6,26 @@ use App\Models\Label;
 use App\Models\Task;
 use App\Models\TaskStatus;
 use App\Models\User;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
 class TaskTest extends TestCase
 {
-    private object $user;
-    private object $taskStatus;
+    private Model $user;
+    private Model $task;
+    private array $request;
 
     public function setUp(): void
     {
         parent::setUp();
-        $this->user = User::factory()->create();
-        $this->taskStatus = TaskStatus::factory()->create();
+        $this->user = User::factory()->createOne();
+        $this->request = [
+            'name' => 'Task 1',
+            'description' => 'description',
+            'status_id' => 1,
+        ];
+        $this->task = Task::factory()->createOne(['created_by_id' => $this->user]);
     }
 
     /**
@@ -31,13 +38,6 @@ class TaskTest extends TestCase
             ->assertOk();
     }
 
-    public function testSeeAsUser()
-    {
-        $this->actingAs($this->user)
-            ->get(route('tasks.index'))
-            ->assertSee('Create new task');
-    }
-
     /**
      * @covers \App\Http\Controllers\TaskController::create
      *
@@ -45,6 +45,10 @@ class TaskTest extends TestCase
     public function testCreateTask()
     {
         $this->get(route('tasks.create'))
+            ->assertStatus(403);
+
+        $this->actingAs($this->user)
+            ->get(route('tasks.create'))
             ->assertOk();
     }
 
@@ -54,21 +58,12 @@ class TaskTest extends TestCase
      */
     public function testStoreTask()
     {
-        $assignedUser = User::factory()->create();
-        $label = Label::factory()->create();
-        $newTask = [
-            'name' => 'task',
-            'description' => 'description',
-            'status_id' => $this->taskStatus->id,
-            'assigned_to_id' => $assignedUser->id,
-            'labels' => [$label->id]
-        ];
         $this->actingAs($this->user)
-            ->post(route('tasks.store', $newTask))
+            ->post(route('tasks.store', $this->request))
             ->assertRedirect(route('tasks.index'));
         $this->get(route('tasks.index'))
-            ->assertSee($newTask['name']);
-        $this->assertDatabaseCount('tasks', 1);
+            ->assertSee($this->request['name']);
+        $this->assertDatabaseHas('tasks', $this->request);
     }
 
     /**
@@ -77,9 +72,9 @@ class TaskTest extends TestCase
      */
     public function testShowTask()
     {
-        $task = Task::factory()->create();
-        $this->get(route('tasks.show', $task))
-            ->assertSee([$task->name, $task->description, $task->status->name]);
+        $taskToArray = $this->task->toArray();
+        $this->get(route('tasks.show', $this->task))
+            ->assertSee([$taskToArray['name'], $taskToArray['description']]);
     }
 
     /**
@@ -88,17 +83,15 @@ class TaskTest extends TestCase
      */
     public function testUpdateTask()
     {
-        $task = Task::factory()->create();
         $request = ['name' => 'new task',
-            'description' => '',
-            'status_id' => $task->status->id,
-            'assigned_to_id' => $this->user->id
-            ];
-        $this->patch(route('tasks.update', $task), $request)
+            'status_id' => 1];
+        $this->patch(route('tasks.update', $this->task), $request)
+            ->assertStatus(403);
+        $this->actingAs($this->user)
+            ->patch(route('tasks.update', $this->task), $request)
             ->assertRedirect(route('tasks.index'))
             ->assertSessionDoesntHaveErrors();
-        $updatedTask = DB::table('tasks')->find($task->id);
-        $this->assertEquals($request['name'], $updatedTask->name);
+        $this->assertDatabaseHas('tasks', $request);
     }
 
     /**
@@ -107,10 +100,11 @@ class TaskTest extends TestCase
      */
     public function testDestroyTask()
     {
-        $task = Task::factory()->create();
-        $this->assertModelExists($task);
-        $this->delete(route('tasks.destroy', $task))
+        $this->delete(route('tasks.destroy', $this->task))
+            ->assertStatus(403);
+        $this->actingAs($this->user)
+            ->delete(route('tasks.destroy', $this->task))
             ->assertRedirect(route('tasks.index'));
-        $this->assertModelMissing($task);
+        $this->assertModelMissing($this->task);
     }
 }

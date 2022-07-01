@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreLabelRequest;
+use App\Http\Requests\UpdateLabelRequest;
 use App\Models\Label;
+use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
@@ -27,9 +30,11 @@ class LabelController extends Controller
      * Show the form for creating a new resource.
      *
      * @return Application|Factory|View
+     * @throws AuthorizationException
      */
-    public function create(): Application|Factory|View
+    public function create(Request $request): Application|Factory|View
     {
+        $this->authorize('create', Label::class);
         $label = new Label();
         return view('labels.create', compact('label'));
     }
@@ -37,20 +42,16 @@ class LabelController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param Request $request
+     * @param StoreLabelRequest $request
      * @return RedirectResponse
      */
-    public function store(Request $request): RedirectResponse
+    public function store(StoreLabelRequest $request): RedirectResponse
     {
-        $data = $this->validate($request, [
-            'name' => 'required|unique:labels',
-            'description' => 'nullable|max:255'
-        ]);
-
+        $data = $request->validated();
         $newLabel = new Label($data);
         $newLabel->save();
 
-        flash(__('messages.created', ['name' => 'label']));
+        flash(__('messages.label.created'));
 
         return redirect()->route('labels.index');
     }
@@ -63,6 +64,7 @@ class LabelController extends Controller
      */
     public function edit(Label $label): Application|Factory|View
     {
+        $this->authorize('edit', Label::class);
         $label = Label::findOrFail($label->id);
         return view('labels.edit', compact('label'));
     }
@@ -70,22 +72,19 @@ class LabelController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param Request $request
+     * @param UpdateLabelRequest $request
      * @param Label $label
      * @return RedirectResponse
      */
-    public function update(Request $request, Label $label): RedirectResponse
+    public function update(UpdateLabelRequest $request, Label $label): RedirectResponse
     {
         $updatingLabel = Label::findOrFail($label->id);
-        $data = $this->validate($request, [
-            'name' => 'required|unique:labels,name,' . $updatingLabel->id,
-            'description' => 'nullable|max:255'
-        ]);
+        $data = $request->validated();
 
         $updatingLabel->fill($data);
         $updatingLabel->save();
 
-        flash(__('messages.updated', ['name' => 'label']));
+        flash(__('messages.label.updated'));
 
         return redirect()->route('labels.index');
     }
@@ -98,16 +97,17 @@ class LabelController extends Controller
      */
     public function destroy(Label $label): RedirectResponse
     {
+        $this->authorize('delete', Label::class);
         $deletingLabel = Label::findOrFail($label->id);
         $tasks = $deletingLabel->tasks()->get();
 
         if ($tasks->isEmpty()) {
             $deletingLabel->delete();
-            flash(__('messages.deleted', ['name' => 'label']));
+            flash(__('messages.label.deleted'));
             return redirect()->route('labels.index');
         }
 
-        flash(__('messages.unsuccessful', ['name' => 'label']))->warning();
+        flash(__('messages.label.unsuccessful'))->warning();
         return redirect()->route('labels.index');
     }
 }
