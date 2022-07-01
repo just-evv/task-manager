@@ -72,9 +72,9 @@ class TaskTest extends TestCase
      */
     public function testShowTask()
     {
-        $taskToArray = $this->task->toArray();
+        //$taskToArray = $this->task->toArray();
         $this->get(route('tasks.show', $this->task))
-            ->assertSee([$taskToArray['name'], $taskToArray['description']]);
+            ->assertSee([$this->task->name]);
     }
 
     /**

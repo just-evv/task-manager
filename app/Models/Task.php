@@ -7,15 +7,21 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
+/*
+ * @property int $id
+ * @property string $name
+ */
 class Task extends Model
 {
     use HasFactory;
+
 
     /**
      * The attributes that are mass assignable.
      *
      * @var array<string>
      */
+
     protected $fillable = [
         'name',
         'description',
