@@ -24,13 +24,23 @@ class TaskPolicy
     }
 
     /**
+     * Determine whether the user have access to edit modest page.
+     *
+     * @param User $user
+     * @return Response|bool
+     */
+    public function edit(User $user): Response|bool
+    {
+        return Auth::check();
+    }
+
+    /**
      * Determine whether the user can update the model.
      *
      * @param User $user
-     * @param Task $task
      * @return Response|bool
      */
-    public function update(User $user, Task $task): Response|bool
+    public function update(User $user): Response|bool
     {
         return Auth::check();
     }

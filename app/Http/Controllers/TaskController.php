@@ -48,6 +48,7 @@ class TaskController extends Controller
      */
     public function create(): View|Factory|Application
     {
+        $this->authorize('create', Task::class);
         $task = new Task();
         $statuses = TaskStatus::pluck('name', 'id');
         $users = User::pluck('name', 'id');
@@ -111,6 +112,7 @@ class TaskController extends Controller
      */
     public function edit(Task $task): View|Factory|Application
     {
+        $this->authorize('edit', Task::class);
         $task = Task::findOrFail($task->id);
         $statuses = TaskStatus::pluck('name', 'id');
         $allUsers = User::pluck('name', 'id');
@@ -127,6 +129,7 @@ class TaskController extends Controller
      */
     public function update(UpdateTaskRequest $request, Task $task): RedirectResponse
     {
+        $this->authorize('update', Task::class);
         $task = Task::findOrFail($task->id);
         $data = $request->validated();
 
@@ -158,6 +161,7 @@ class TaskController extends Controller
      */
     public function destroy(Request $request, Task $task): RedirectResponse
     {
+        $this->authorize('delete', $task);
         $task = Task::findOrFail($task->id);
         $task->labels()->detach();
         $task->delete();
