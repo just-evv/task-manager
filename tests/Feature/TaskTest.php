@@ -13,8 +13,6 @@ use Tests\TestCase;
 class TaskTest extends TestCase
 {
     private Model $user;
-    private Model $taskStatus;
-    private Model $assignedUser;
     private Model $task;
     private array $request;
 
@@ -22,13 +20,10 @@ class TaskTest extends TestCase
     {
         parent::setUp();
         $this->user = User::factory()->createOne();
-        $this->taskStatus = TaskStatus::factory()->createOne();
-        $this->assignedUser = User::factory()->createOne();
         $this->request = [
             'name' => 'Task 1',
             'description' => 'description',
-            'status_id' => $this->taskStatus->id,
-            'assigned_to_id' => $this->assignedUser->id,
+            'status_id' => 1,
         ];
         $this->task = Task::factory()->createOne(['created_by_id' => $this->user]);
     }
@@ -89,16 +84,13 @@ class TaskTest extends TestCase
     public function testUpdateTask()
     {
         $request = ['name' => 'new task',
-            'status_id' => $this->taskStatus->id,
-            'assigned_to_id' => $this->assignedUser->id
-            ];
+            'status_id' => 1];
         $this->patch(route('tasks.update', $this->task), $request)
             ->assertStatus(403);
         $this->actingAs($this->user)
             ->patch(route('tasks.update', $this->task), $request)
             ->assertRedirect(route('tasks.index'))
             ->assertSessionDoesntHaveErrors();
-        $updatedTaskToArray = $this->task->toArray();
         $this->assertDatabaseHas('tasks', $request);
     }
 
