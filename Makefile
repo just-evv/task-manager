@@ -27,6 +27,7 @@ setup:
 	docker-compose exec -T laravel.test php artisan migrate
 	npm install
 
+
 test-coverage:
 	docker-compose exec -T laravel.test php artisan db:seed
 	docker-compose exec -T laravel.test php artisan test --coverage-clover coverage.xml
