@@ -20,13 +20,14 @@ deploy:
 	git push heroku main
 
 setup:
-	composer install
-	composer update
+	docker run --rm -v $(PWD):/app composer/composer:latest install
 	cp -n .env.example .env|| true
 	php artisan key:gen --ansi
-	./vendor/bin/sail up -d
-	./vendor/bin/sail artisan migrate
+	docker-compose up -d
+	docker-compose exec -T laravel.test php artisan migrate
+	npm install
+
 
 test-coverage:
-	./vendor/bin/sail artisan db:seed
-	./vendor/bin/sail artisan test --coverage-clover coverage.xml
+	docker-compose exec -T laravel.test php artisan db:seed
+	docker-compose exec -T laravel.test php artisan test --coverage-clover coverage.xml
