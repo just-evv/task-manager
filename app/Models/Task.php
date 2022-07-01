@@ -10,11 +10,11 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 /*
  * @property int $id
  * @property string $name
+ * @property string $description
  */
 class Task extends Model
 {
     use HasFactory;
-
 
     /**
      * The attributes that are mass assignable.

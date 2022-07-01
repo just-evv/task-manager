@@ -10,10 +10,13 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
+/**
+ * @property \Illuminate\Database\Eloquent\Model|\App\Models\Task $task
+ */
 class TaskTest extends TestCase
 {
     private Model $user;
-    private mixed $task;
+    private Model $task;
     private array $request;
 
     public function setUp(): void
@@ -62,7 +65,7 @@ class TaskTest extends TestCase
             ->post(route('tasks.store', $this->request))
             ->assertRedirect(route('tasks.index'));
         $this->get(route('tasks.index'))
-            ->assertSee($this->request['name']);
+            ->assertSee([$this->request['name']]);
         $this->assertDatabaseHas('tasks', $this->request);
     }
 
@@ -72,7 +75,6 @@ class TaskTest extends TestCase
      */
     public function testShowTask()
     {
-        //$taskToArray = $this->task->toArray();
         $this->get(route('tasks.show', $this->task))
             ->assertSee([$this->task->name]);
     }
