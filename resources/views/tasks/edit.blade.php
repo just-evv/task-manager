@@ -30,7 +30,7 @@
         <br>
         {{ Form::label('labels', __('Labels')) }}
         <br>
-        {{ Form::select('labels[]', $labels, null, ['multiple' => 'multiple', 'class' => 'form-control', 'placeholder' => '----------']) }}
+        {{ Form::select('labels[]', $labels, null, ['multiple' => 'multiple', 'class' => 'form-control']) }}
         <br>
         {{ Form::submit(__('Update'), ['class' => 'btn btn-primary mt-3']) }}
         {{ Form::close() }}

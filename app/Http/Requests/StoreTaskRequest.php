@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use App\Models\Task;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreTaskRequest extends FormRequest
 {
@@ -34,7 +35,7 @@ class StoreTaskRequest extends FormRequest
         return [
             'name' => 'required|unique:tasks',
             'description' => 'nullable|max:255',
-            'status_id' => 'required',
+            'status_id' => 'int|required|exists:task_statuses,id',
             'assigned_to_id' => 'nullable',
             'labels' => 'nullable'
         ];

@@ -8,11 +8,8 @@ use App\Models\Label;
 use App\Models\Task;
 use App\Models\TaskStatus;
 use App\Models\User;
-use Illuminate\Contracts\Foundation\Application;
-use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 use Spatie\QueryBuilder\AllowedFilter;
@@ -48,11 +45,10 @@ class TaskController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return Application|Factory|View
+     * @return View
      */
-    public function create(): View|Factory|Application
+    public function create(): View
     {
-        $this->authorize('create', Task::class);
         $task = new Task();
         $statuses = TaskStatus::pluck('name', 'id');
         $users = User::pluck('name', 'id');
@@ -70,28 +66,19 @@ class TaskController extends Controller
     public function store(StoreTaskRequest $request): RedirectResponse
     {
         $data = $request->validated();
+        $user = Auth::user();
 
-        $userId = Auth::id();
-        $user = User::find($userId);
-        $status = TaskStatus::find($data['status_id']);
-
-        $task = new Task($data);
-
+        $task = new Task();
+        $task->fill($data);
         $task->creator()->associate($user);
-        $task->status()->associate($status);
         $task->save();
 
-        if (array_key_exists('assigned_to_id', $data)) {
-            $assignedUser = User::find($data['assigned_to_id']);
-            $task->assignedUser()->associate($assignedUser);
-        }
         if (array_key_exists('labels', $data)) {
-            $label = Label::find($data['labels'][0]);
-            $task->labels()->attach($label);
+            $task->labels()->sync($data['labels']);
+            $task->save();
         }
-        $task->save();
 
-        flash(__('messages.task.created'));
+        flash(__('messages.task.created'))->success();
         return redirect()->route('tasks.index');
     }
 
@@ -99,11 +86,10 @@ class TaskController extends Controller
      * Display the specified resource.
      *
      * @param Task $task
-     * @return Application|Factory|View
+     * @return View
      */
-    public function show(Task $task): View|Factory|Application
+    public function show(Task $task): View
     {
-        $task = Task::findOrFail($task->id);
         return view('tasks.show', compact('task'));
     }
 
@@ -111,11 +97,10 @@ class TaskController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param Task $task
-     * @return Application|Factory|View
+     * @return View
      */
-    public function edit(Task $task): View|Factory|Application
+    public function edit(Task $task): View
     {
-        $this->authorize('edit', Task::class);
         $statuses = TaskStatus::pluck('name', 'id');
         $allUsers = User::pluck('name', 'id');
         $labels = Label::pluck('name', 'id');
@@ -131,25 +116,16 @@ class TaskController extends Controller
      */
     public function update(UpdateTaskRequest $request, Task $task): RedirectResponse
     {
-        $this->authorize('update', Task::class);
         $data = $request->validated();
-
         $task->fill($data);
-
-        $status = TaskStatus::find($data['status_id']);
-
-        $task->status()->associate($status);
-        if (array_key_exists('assigned_to_id', $data)) {
-            $assignedUser = User::find($data['assigned_to_id']);
-            $task->assignedUser()->associate($assignedUser);
-        }
-        if (array_key_exists('labels', $data)) {
-            $label = Label::find($data['labels'][0]);
-            $task->labels()->attach($label);
-        }
         $task->save();
 
-        flash(__('messages.task.updated'));
+        if (array_key_exists('labels', $data)) {
+            $task->labels()->sync($data['labels']);
+            $task->save();
+        }
+
+        flash(__('messages.task.updated'))->success();
 
         return redirect()->route('tasks.index');
     }
@@ -162,10 +138,9 @@ class TaskController extends Controller
      */
     public function destroy(Task $task): RedirectResponse
     {
-        $this->authorize('delete', $task);
         $task->labels()->detach();
         $task->delete();
-        flash(__('messages.task.deleted'));
+        flash(__('messages.task.deleted'))->success();
         return redirect()->route('tasks.index');
     }
 }
