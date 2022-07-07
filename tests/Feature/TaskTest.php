@@ -10,12 +10,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
-/**
- * @property Model|Task $task
- */
 class TaskTest extends TestCase
 {
-    private Model $user;
+    private User $user;
     private Task $task;
     private array $request;
 
