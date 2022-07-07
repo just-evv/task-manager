@@ -55,6 +55,11 @@ class TaskPolicy
         return Auth::check();
     }
 
+    public function edit(User $user): Response|bool
+    {
+        return Auth::check();
+    }
+
     /**
      * Determine whether the user can delete the model.
      *
