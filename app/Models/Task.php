@@ -7,11 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
-/*
- * @property int $id
- * @property string $name
- * @property string $description
- */
 class Task extends Model
 {
     use HasFactory;

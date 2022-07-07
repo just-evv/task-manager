@@ -20,12 +20,16 @@ use Spatie\QueryBuilder\QueryBuilder;
 
 class TaskController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(Task::class);
+    }
     /**
      * Display a listing of the resource.
      *
-     * @return Application|Factory|View
+     * @return View
      */
-    public function index(): View|Factory|Application
+    public function index(): View
     {
         $statuses = TaskStatus::pluck('name', 'id');
         $users = User::pluck('name', 'id');
@@ -71,7 +75,6 @@ class TaskController extends Controller
         $user = User::find($userId);
         $status = TaskStatus::find($data['status_id']);
 
-
         $task = new Task($data);
 
         $task->creator()->associate($user);
@@ -113,7 +116,6 @@ class TaskController extends Controller
     public function edit(Task $task): View|Factory|Application
     {
         $this->authorize('edit', Task::class);
-        $task = Task::findOrFail($task->id);
         $statuses = TaskStatus::pluck('name', 'id');
         $allUsers = User::pluck('name', 'id');
         $labels = Label::pluck('name', 'id');
@@ -130,7 +132,6 @@ class TaskController extends Controller
     public function update(UpdateTaskRequest $request, Task $task): RedirectResponse
     {
         $this->authorize('update', Task::class);
-        $task = Task::findOrFail($task->id);
         $data = $request->validated();
 
         $task->fill($data);
@@ -159,10 +160,9 @@ class TaskController extends Controller
      * @param Task $task
      * @return RedirectResponse
      */
-    public function destroy(Request $request, Task $task): RedirectResponse
+    public function destroy(Task $task): RedirectResponse
     {
         $this->authorize('delete', $task);
-        $task = Task::findOrFail($task->id);
         $task->labels()->detach();
         $task->delete();
         flash(__('messages.task.deleted'));
