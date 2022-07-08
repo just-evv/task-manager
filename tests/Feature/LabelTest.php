@@ -27,6 +27,12 @@ class LabelTest extends TestCase
         $this->label2 = Label::factory()->has(Task::factory())->createOne();
     }
 
+    public function testIndexLabel()
+    {
+        $this->get(route('labels.index'))
+            ->assertOk();
+    }
+
     /**
      * @covers \App\Http\Controllers\LabelController::create
      *
@@ -46,7 +52,10 @@ class LabelTest extends TestCase
      */
     public function testStoreLabel()
     {
+        $this->post(route('labels.store', $this->request))
+            ->assertStatus(403);
         $this->followingRedirects()
+            ->actingAs($this->user)
             ->post(route('labels.store', $this->request))
             ->assertOk()
             ->assertSee($this->request);
@@ -72,7 +81,11 @@ class LabelTest extends TestCase
      */
     public function testUpdateLabel()
     {
+        $this->patch(route('labels.update', $this->label1), $this->request)
+            ->assertStatus(403);
+
         $this->followingRedirects()
+            ->actingAs($this->user)
             ->patch(route('labels.update', $this->label1), $this->request)
             ->assertOk()
             ->assertSessionDoesntHaveErrors()
