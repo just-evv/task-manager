@@ -110,7 +110,7 @@ class TaskStatusTest extends TestCase
      */
     public function testDestroyStatusAssigned()
     {
-        $assignedTaskStatus = $this->task->status;
+        $assignedTaskStatus = $this->task->status();
 
         $this->delete(route('task_statuses.destroy', $assignedTaskStatus))
             ->assertStatus(403);
