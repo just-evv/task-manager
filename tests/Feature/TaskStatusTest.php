@@ -110,17 +110,18 @@ class TaskStatusTest extends TestCase
      */
     public function testDestroyStatusAssigned()
     {
-        $assignedTaskStatus = $this->task->status();
+        $this->task->status()->associate($this->taskStatus);
+        $this->task->save();
 
-        $this->delete(route('task_statuses.destroy', $assignedTaskStatus))
+        $this->delete(route('task_statuses.destroy', $this->taskStatus))
             ->assertStatus(403);
 
         $this->followingRedirects()
             ->actingAs($this->user)
-            ->delete(route('task_statuses.destroy', $assignedTaskStatus))
+            ->delete(route('task_statuses.destroy', $this->taskStatus))
             ->assertOk()
             ->assertSee('Не удалось удалить статус');
 
-        $this->assertDatabaseHas('task_statuses', $assignedTaskStatus->toArray());
+        $this->assertDatabaseHas('task_statuses', $this->taskStatus->toArray());
     }
 }
