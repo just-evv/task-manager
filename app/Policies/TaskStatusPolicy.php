@@ -12,6 +12,16 @@ class TaskStatusPolicy
 {
     use HandlesAuthorization;
 
+    /**
+     * Determine whether the user can view any models.
+     *
+     * @param User $user
+     * @return bool
+     */
+    public function viewAny(?User $user): bool
+    {
+        return true;
+    }
 
     /**
      * Determine whether the user can create models.
@@ -20,16 +30,6 @@ class TaskStatusPolicy
      * @return Response|bool
      */
     public function create(User $user): Response|bool
-    {
-        return Auth::check();
-    }
-    /**
-     * Determine whether the user can accesses the edit model page.
-     *
-     * @param User $user
-     * @return Response|bool
-     */
-    public function edit(User $user): Response|bool
     {
         return Auth::check();
     }

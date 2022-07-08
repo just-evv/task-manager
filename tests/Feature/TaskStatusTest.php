@@ -12,10 +12,10 @@ use Tests\TestCase;
 
 class TaskStatusTest extends TestCase
 {
-    private object $user;
+    private User $user;
     private array $request;
-    private Model $taskStatus;
-    private mixed $task;
+    private TaskStatus $taskStatus;
+    private Task $task;
 
     public function setUp(): void
     {
@@ -47,6 +47,9 @@ class TaskStatusTest extends TestCase
     public function testStoreStatus()
     {
         $this->post(route('task_statuses.store', $this->request))
+            ->assertStatus(403);
+        $this->actingAs($this->user)
+            ->post(route('task_statuses.store', $this->request))
             ->assertRedirect(route('task_statuses.index'));
         $this->get(route('task_statuses.index'))
             ->assertSee($this->request);
@@ -97,7 +100,8 @@ class TaskStatusTest extends TestCase
             ->delete(route('task_statuses.destroy', $this->taskStatus))
             ->assertOk()
             ->assertSee('Статус успешно удалён');
-        $this->assertModelMissing($this->taskStatus);
+
+        $this->assertDatabaseMissing('task_statuses', $this->taskStatus->toArray());
     }
 
     /**
@@ -106,18 +110,18 @@ class TaskStatusTest extends TestCase
      */
     public function testDestroyStatusAssigned()
     {
-        $assignedTaskStatus = $this->task->status;
-        $this->assertModelExists($assignedTaskStatus);
+        $this->task->status()->associate($this->taskStatus);
+        $this->task->save();
 
-        $this->delete(route('task_statuses.destroy', $assignedTaskStatus))
+        $this->delete(route('task_statuses.destroy', $this->taskStatus))
             ->assertStatus(403);
 
         $this->followingRedirects()
             ->actingAs($this->user)
-            ->delete(route('task_statuses.destroy', $assignedTaskStatus))
+            ->delete(route('task_statuses.destroy', $this->taskStatus))
             ->assertOk()
             ->assertSee('Не удалось удалить статус');
 
-        $this->assertModelExists($assignedTaskStatus);
+        $this->assertDatabaseHas('task_statuses', $this->taskStatus->toArray());
     }
 }

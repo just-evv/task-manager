@@ -20,7 +20,7 @@ class TaskFactory extends Factory
     {
         return [
             'name' => $this->faker->word(),
-            'description' => $this->faker->text(),
+            'description' => $this->faker->text(255),
             'status_id' => TaskStatus::factory(),
             'created_by_id' => User::factory(),
             'assigned_to_id' => User::factory()

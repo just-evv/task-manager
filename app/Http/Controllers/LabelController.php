@@ -15,12 +15,16 @@ use Illuminate\Http\Response;
 
 class LabelController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(Label::class);
+    }
     /**
      * Display a listing of the resource.
      *
-     * @return Application|Factory|View
+     * @return View
      */
-    public function index(): View|Factory|Application
+    public function index(): View
     {
         $labels = Label::paginate();
         return view('labels.index', compact('labels'));
@@ -29,12 +33,10 @@ class LabelController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return Application|Factory|View
-     * @throws AuthorizationException
+     * @return View
      */
-    public function create(Request $request): Application|Factory|View
+    public function create(Request $request): View
     {
-        $this->authorize('create', Label::class);
         $label = new Label();
         return view('labels.create', compact('label'));
     }
@@ -48,11 +50,11 @@ class LabelController extends Controller
     public function store(StoreLabelRequest $request): RedirectResponse
     {
         $data = $request->validated();
-        $newLabel = new Label($data);
+        $newLabel = new Label();
+        $newLabel->fill($data);
         $newLabel->save();
 
-        flash(__('messages.label.created'));
-
+        flash(__('messages.label.created'))->success();
         return redirect()->route('labels.index');
     }
 
@@ -60,12 +62,10 @@ class LabelController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param Label $label
-     * @return Application|Factory|View
+     * @return View
      */
-    public function edit(Label $label): Application|Factory|View
+    public function edit(Label $label): View
     {
-        $this->authorize('edit', Label::class);
-        $label = Label::findOrFail($label->id);
         return view('labels.edit', compact('label'));
     }
 
@@ -78,14 +78,11 @@ class LabelController extends Controller
      */
     public function update(UpdateLabelRequest $request, Label $label): RedirectResponse
     {
-        $updatingLabel = Label::findOrFail($label->id);
         $data = $request->validated();
-
-        $updatingLabel->fill($data);
-        $updatingLabel->save();
+        $label->fill($data);
+        $label->save();
 
         flash(__('messages.label.updated'));
-
         return redirect()->route('labels.index');
     }
 
@@ -97,13 +94,9 @@ class LabelController extends Controller
      */
     public function destroy(Label $label): RedirectResponse
     {
-        $this->authorize('delete', Label::class);
-        $deletingLabel = Label::findOrFail($label->id);
-        $tasks = $deletingLabel->tasks()->get();
-
-        if ($tasks->isEmpty()) {
-            $deletingLabel->delete();
-            flash(__('messages.label.deleted'));
+        if (!$label->tasks()->exists()) {
+            $label->delete();
+            flash(__('messages.label.deleted'))->success();
             return redirect()->route('labels.index');
         }
 

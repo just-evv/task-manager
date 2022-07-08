@@ -34,7 +34,7 @@ class UpdateTaskRequest extends FormRequest
         return [
             'name' => ['required', Rule::unique('tasks')->ignore($this->task)],
             'description' => 'nullable|max:255',
-            'status_id' => 'required',
+            'status_id' => 'required|integer|exists:task_statuses,id',
             'assigned_to_id' => 'nullable',
             'labels' => 'nullable'
         ];
