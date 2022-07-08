@@ -12,10 +12,10 @@ use Tests\TestCase;
 
 class TaskStatusTest extends TestCase
 {
-    private object $user;
+    private User $user;
     private array $request;
-    private Model $taskStatus;
-    private mixed $task;
+    private TaskStatus $taskStatus;
+    private Task $task;
 
     public function setUp(): void
     {
@@ -47,6 +47,9 @@ class TaskStatusTest extends TestCase
     public function testStoreStatus()
     {
         $this->post(route('task_statuses.store', $this->request))
+            ->assertStatus(403);
+        $this->actingAs($this->user)
+            ->post(route('task_statuses.store', $this->request))
             ->assertRedirect(route('task_statuses.index'));
         $this->get(route('task_statuses.index'))
             ->assertSee($this->request);

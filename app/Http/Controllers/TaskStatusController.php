@@ -15,6 +15,10 @@ use Illuminate\Validation\ValidationException;
 
 class TaskStatusController extends Controller
 {
+    public function __construct()
+    {
+        $this->authorizeResource(TaskStatus::class);
+    }
     /**
      * Display a listing of the resource.
      *
@@ -34,7 +38,6 @@ class TaskStatusController extends Controller
      */
     public function create(): View|Factory|Application
     {
-        $this->authorize('create', TaskStatus::class);
         $taskStatus = new TaskStatus();
         return view('task_statuses.create', compact('taskStatus'));
     }
@@ -53,11 +56,11 @@ class TaskStatusController extends Controller
             'name' => 'required|unique:task_statuses'
         ], $messages);
 
-        $newStatus = new TaskStatus($data);
-        $newStatus->save();
+        $taskStatus = new TaskStatus();
+        $taskStatus->fill($data);
+        $taskStatus->save();
 
-        flash(__('messages.status.created'));
-
+        flash(__('messages.status.created'))->success();
         return redirect()->route('task_statuses.index');
     }
 
@@ -69,9 +72,7 @@ class TaskStatusController extends Controller
      */
     public function edit(TaskStatus $taskStatus): View|Factory|Application
     {
-        $this->authorize('edit', TaskStatus::class);
-        $status = TaskStatus::findOrFail($taskStatus->id);
-        return view('task_statuses.edit', compact('status'));
+        return view('task_statuses.edit', compact('taskStatus'));
     }
 
     /**
@@ -83,18 +84,15 @@ class TaskStatusController extends Controller
      */
     public function update(Request $request, TaskStatus $taskStatus): RedirectResponse
     {
-        $this->authorize('update', TaskStatus::class);
-        $status = TaskStatus::findOrFail($taskStatus->id);
         $messages = ['unique' => __('validation.status.unique')];
-
         $data = $this->validate($request, [
-            'name' => ['required', Rule::unique('task_statuses')->ignore($status)]
+            'name' => ['required', Rule::unique('task_statuses')->ignore($taskStatus)]
         ], $messages);
-        $status->fill($data);
-        $status->save();
+
+        $taskStatus->fill($data);
+        $taskStatus->save();
 
         flash(__('messages.status.updated'));
-
         return redirect()->route('task_statuses.index');
     }
 
@@ -106,13 +104,9 @@ class TaskStatusController extends Controller
      */
     public function destroy(TaskStatus $taskStatus): RedirectResponse
     {
-        $this->authorize('delete', TaskStatus::class);
-        $status = TaskStatus::findOrFail($taskStatus->id);
-        $tasks = $status->tasks()->get();
-
-        if ($tasks->isEmpty()) {
-            $status->delete();
-            flash(__('messages.status.deleted'));
+        if (!$taskStatus->tasks()->exists()) {
+            $taskStatus->delete();
+            flash(__('messages.status.deleted'))->success();
             return redirect()->route('task_statuses.index');
         }
 
