@@ -182,6 +182,7 @@ return [
          * Misc
          */
         Rollbar\Laravel\RollbarServiceProvider::class,
+        Collective\Html\HtmlServiceProvider::class,
     ],
 
     /*
@@ -196,7 +197,8 @@ return [
     */
 
     'aliases' => Facade::defaultAliases()->merge([
-        // ...
+        'Form'      => '\Collective\Html\FormFacade',
+        'Html'      => '\Collective\Html\HtmlFacade',
     ])->toArray(),
 
 ];
