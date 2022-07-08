@@ -13,13 +13,9 @@
         {{ Form::bsSelectOne('status_id', 'Status', $statuses, null, ['placeholder' => '----------']) }}
 
         {{ Form::bsSelectOne('assigned_to_id', 'Assigned to', $users, null, ['placeholder' => '----------']) }}
-        <br>
-        {{ Form::select('assigned_to_id', $allUsers, null, ['class' => 'form-control', 'placeholder' => '----------']) }}
-        <br>
-        {{ Form::label('labels', __('Labels')) }}
-        <br>
-        {{ Form::select('labels[]', $labels, null, ['multiple' => 'multiple', 'class' => 'form-control']) }}
-        <br>
+
+        {{ Form::bsSelectMany('labels', 'Labels', $labels, null,['id' => 'labels']) }}
+
         {{ Form::submit(__('Update'), ['class' => 'btn btn-primary mt-3']) }}
         {{ Form::close() }}
 

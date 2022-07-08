@@ -102,9 +102,9 @@ class TaskController extends Controller
     public function edit(Task $task): View
     {
         $statuses = TaskStatus::pluck('name', 'id');
-        $allUsers = User::pluck('name', 'id');
+        $users = User::pluck('name', 'id');
         $labels = Label::pluck('name', 'id');
-        return view('tasks.edit', compact(['task', 'statuses', 'allUsers', 'labels']));
+        return view('tasks.edit', compact(['task', 'statuses', 'users', 'labels']));
     }
 
     /**
