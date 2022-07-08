@@ -15,7 +15,7 @@ class TaskStatusTest extends TestCase
     private User $user;
     private array $request;
     private Model|TaskStatus $taskStatus;
-    private Model|Task $task;
+    private Task $task;
 
     public function setUp(): void
     {
