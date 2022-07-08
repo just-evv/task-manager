@@ -14,7 +14,7 @@ class TaskStatusTest extends TestCase
 {
     private User $user;
     private array $request;
-    private Model $taskStatus;
+    private TaskStatus $taskStatus;
     private Task $task;
 
     public function setUp(): void
@@ -100,7 +100,8 @@ class TaskStatusTest extends TestCase
             ->delete(route('task_statuses.destroy', $this->taskStatus))
             ->assertOk()
             ->assertSee('Статус успешно удалён');
-        $this->assertModelMissing($this->taskStatus);
+
+        $this->assertDatabaseMissing('task_statuses', $this->taskStatus->toArray());
     }
 
     /**
@@ -110,7 +111,6 @@ class TaskStatusTest extends TestCase
     public function testDestroyStatusAssigned()
     {
         $assignedTaskStatus = $this->task->status;
-        $this->assertModelExists($assignedTaskStatus);
 
         $this->delete(route('task_statuses.destroy', $assignedTaskStatus))
             ->assertStatus(403);
@@ -121,6 +121,6 @@ class TaskStatusTest extends TestCase
             ->assertOk()
             ->assertSee('Не удалось удалить статус');
 
-        $this->assertModelExists($assignedTaskStatus);
+        $this->assertDatabaseHas('task_statuses', $assignedTaskStatus->toArray());
     }
 }
