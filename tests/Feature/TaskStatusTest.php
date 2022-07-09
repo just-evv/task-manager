@@ -113,6 +113,7 @@ class TaskStatusTest extends TestCase
             ->assertSee('Статус успешно удалён');
 
         $this->assertDatabaseMissing('task_statuses', $taskStatus->toArray());
+        $this->assertModelExists($taskStatus);
     }
 
     /**
@@ -134,5 +135,6 @@ class TaskStatusTest extends TestCase
             ->assertSee('Не удалось удалить статус');
 
         $this->assertDatabaseHas('task_statuses', $taskStatus->toArray());
+        $this->assertModelExists($taskStatus);
     }
 }
