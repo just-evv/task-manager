@@ -10,6 +10,10 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
+/**
+ * @covers \App\Http\Controllers\TaskStatusController
+ * @covers \App\Policies\TaskStatusPolicy
+ */
 class TaskStatusTest extends TestCase
 {
     private User $user;
@@ -113,7 +117,7 @@ class TaskStatusTest extends TestCase
             ->assertSee('Статус успешно удалён');
 
         $this->assertDatabaseMissing('task_statuses', $taskStatus->toArray());
-        $this->assertModelExists($taskStatus);
+        $this->assertModelMissing($taskStatus);
     }
 
     /**

@@ -8,6 +8,10 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Tests\TestCase;
 
+/**
+ * @covers \App\Http\Controllers\LabelController
+ * @covers \App\Policies\LabelPolicy
+ */
 class LabelTest extends TestCase
 {
     private Model $user;
@@ -27,20 +31,12 @@ class LabelTest extends TestCase
         $this->label2 = Label::factory()->has(Task::factory())->createOne();
     }
 
-    /**
-     * @covers \App\Http\Controllers\LabelController::index
-     * @covers \App\Policies\LabelPolicy::viewAny
-     */
     public function testIndexLabel()
     {
         $this->get(route('labels.index'))
             ->assertOk();
     }
 
-    /**
-     * @covers \App\Http\Controllers\LabelController::create
-     * @covers \App\Policies\LabelPolicy::create
-     */
     public function testCreateLabel()
     {
         $this->get(route('labels.create'))
@@ -50,10 +46,6 @@ class LabelTest extends TestCase
             ->assertOk();
     }
 
-    /**
-     * @covers \App\Http\Controllers\LabelController::store
-     * @covers \App\Policies\LabelPolicy::create
-     */
     public function testStoreLabel()
     {
         $this->post(route('labels.store', $this->request))
@@ -66,10 +58,6 @@ class LabelTest extends TestCase
         $this->assertDatabaseHas('labels', $this->request);
     }
 
-    /**
-     * @covers \App\Http\Controllers\LabelController::edit
-     * @covers \App\Policies\LabelPolicy::update
-     */
     public function testEditLabel()
     {
         $this->get(route('labels.edit', $this->label1))
@@ -79,10 +67,7 @@ class LabelTest extends TestCase
             ->assertOk();
     }
 
-    /**
-     * @covers \App\Http\Controllers\LabelController::update
-     * @covers \App\Policies\LabelPolicy::update
-     */
+
     public function testUpdateLabel()
     {
         $this->patch(route('labels.update', $this->label1), $this->request)
@@ -96,10 +81,6 @@ class LabelTest extends TestCase
             ->assertSee($this->request);
     }
 
-    /**
-     * @covers \App\Http\Controllers\LabelController::destroy
-     * @covers \App\Policies\LabelPolicy::delete
-     */
     public function testDestroyLabel()
     {
         $this->delete(route('labels.destroy', $this->label1))
