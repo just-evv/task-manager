@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
 /**
+ * @covers \App\Models\TaskStatus
  * @covers \App\Http\Controllers\TaskStatusController
  * @covers \App\Policies\TaskStatusPolicy
  */
@@ -25,20 +26,14 @@ class TaskStatusTest extends TestCase
         $this->user = User::factory()->create();
         $this->request = ['name' => 'Testing Status'];
     }
-    /**
-     * @covers \App\Http\Controllers\TaskStatusController::index
-     *
-     */
+
     public function testIndexTaskStatus()
     {
         $this->get(route('task_statuses.index'))
             ->assertOk()
             ->assertViewIs('task_statuses.index');
     }
-    /**
-     * @covers \App\Http\Controllers\TaskStatusController::create
-     *
-     */
+
     public function testCreateStatus()
     {
         $this->get(route('task_statuses.create'))
@@ -50,10 +45,6 @@ class TaskStatusTest extends TestCase
             ->assertViewIs('task_statuses.create');
     }
 
-    /**
-     * @covers \App\Http\Controllers\TaskStatusController::store
-     *
-     */
     public function testStoreStatus()
     {
         $this->post(route('task_statuses.store', $this->request))
@@ -66,10 +57,6 @@ class TaskStatusTest extends TestCase
         $this->assertDatabaseHas('task_statuses', $this->request);
     }
 
-    /**
-     * @covers \App\Http\Controllers\TaskStatusController::edit
-     *
-     */
     public function testEditStatus()
     {
         $taskStatus = TaskStatus::factory()->createOne();
@@ -81,10 +68,6 @@ class TaskStatusTest extends TestCase
             ->assertViewIs('task_statuses.edit');
     }
 
-    /**
-     * @covers \App\Http\Controllers\TaskStatusController::update
-     *
-     */
     public function testUpdateStatus()
     {
         $taskStatus = TaskStatus::factory()->createOne();
@@ -99,10 +82,6 @@ class TaskStatusTest extends TestCase
         $this->assertDatabaseHas('task_statuses', $this->request);
     }
 
-    /**
-     * @covers \App\Http\Controllers\TaskStatusController::destroy
-     *
-     */
     public function testDestroyStatusNotAssigned()
     {
         $taskStatus = TaskStatus::factory()->createOne();
@@ -120,10 +99,6 @@ class TaskStatusTest extends TestCase
         $this->assertModelMissing($taskStatus);
     }
 
-    /**
-     * @covers \App\Http\Controllers\TaskStatusController::destroy
-     *
-     */
     public function testDestroyStatusAssigned()
     {
         $taskStatus = TaskStatus::factory()->createOne();
