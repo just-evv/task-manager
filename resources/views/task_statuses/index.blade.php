@@ -2,7 +2,7 @@
 
 @section('content')
     @include('flash::message')
-    <h1 class="mb-5">Statuses</h1>
+    <h1 class="mb-5">{{__('Statuses')}}</h1>
     @can('create', App\Models\TaskStatus::class)
     <a href="{{ route('task_statuses.create') }}" class="btn btn-primary">{{__('Create new status')}}</a>
     @endcan
