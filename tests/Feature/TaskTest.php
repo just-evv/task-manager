@@ -2,14 +2,15 @@
 
 namespace Tests\Feature;
 
-use App\Models\Label;
 use App\Models\Task;
-use App\Models\TaskStatus;
 use App\Models\User;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
+/**
+ * @covers \App\Models\Task
+ * @covers \App\Http\Controllers\TaskController
+ * @covers \App\Policies\TaskPolicy
+ */
 class TaskTest extends TestCase
 {
     private User $user;
@@ -28,20 +29,13 @@ class TaskTest extends TestCase
         $this->task = Task::factory()->createOne(['created_by_id' => $this->user]);
     }
 
-    /**
-     * @covers \App\Http\Controllers\TaskController::index
-     *
-     */
     public function testTasksIndex()
     {
         $this->get(route('tasks.index'))
-            ->assertOk();
+            ->assertOk()
+            ->assertViewIs('tasks.index');
     }
 
-    /**
-     * @covers \App\Http\Controllers\TaskController::create
-     *
-     */
     public function testCreateTask()
     {
         $this->get(route('tasks.create'))
@@ -49,13 +43,11 @@ class TaskTest extends TestCase
 
         $this->actingAs($this->user)
             ->get(route('tasks.create'))
-            ->assertOk();
+            ->assertOk()
+            ->assertViewIs('tasks.create');
+        ;
     }
 
-    /**
-     * @covers \App\Http\Controllers\TaskController::store
-     *
-     */
     public function testStoreTask()
     {
         $this->actingAs($this->user)
@@ -66,20 +58,12 @@ class TaskTest extends TestCase
         $this->assertDatabaseHas('tasks', $this->request);
     }
 
-    /**
-     * @covers \App\Http\Controllers\TaskController::show
-     *
-     */
     public function testShowTask()
     {
         $this->get(route('tasks.show', $this->task))
             ->assertSee([$this->task->name]);
     }
 
-    /**
-     * @covers \App\Http\Controllers\TaskController::update
-     *
-     */
     public function testUpdateTask()
     {
         $request = ['name' => 'new task',
@@ -93,10 +77,6 @@ class TaskTest extends TestCase
         $this->assertDatabaseHas('tasks', $request);
     }
 
-    /**
-     * @covers \App\Http\Controllers\TaskController::destroy
-     *
-     */
     public function testDestroyTask()
     {
         $this->delete(route('tasks.destroy', $this->task))

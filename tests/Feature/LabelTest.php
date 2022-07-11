@@ -8,12 +8,15 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Tests\TestCase;
 
+/**
+ * @covers \App\Models\Label
+ * @covers \App\Http\Controllers\LabelController
+ * @covers \App\Policies\LabelPolicy
+ */
 class LabelTest extends TestCase
 {
     private Model $user;
     private array $request;
-    private Model $label1;
-    private Model $label2;
 
     public function setUp(): void
     {
@@ -23,8 +26,6 @@ class LabelTest extends TestCase
             'name' => 'Label 1',
             'description' => 'Description 1'
         ];
-        $this->label1 = Label::factory()->createOne();
-        $this->label2 = Label::factory()->has(Task::factory())->createOne();
     }
 
     public function testIndexLabel()
@@ -33,10 +34,6 @@ class LabelTest extends TestCase
             ->assertOk();
     }
 
-    /**
-     * @covers \App\Http\Controllers\LabelController::create
-     *
-     */
     public function testCreateLabel()
     {
         $this->get(route('labels.create'))
@@ -46,10 +43,6 @@ class LabelTest extends TestCase
             ->assertOk();
     }
 
-    /**
-     * @covers \App\Http\Controllers\LabelController::store
-     *
-     */
     public function testStoreLabel()
     {
         $this->post(route('labels.store', $this->request))
@@ -62,59 +55,51 @@ class LabelTest extends TestCase
         $this->assertDatabaseHas('labels', $this->request);
     }
 
-    /**
-     * @covers \App\Http\Controllers\LabelController::edit
-     *
-     */
     public function testEditLabel()
     {
-        $this->get(route('labels.edit', $this->label1))
+        $label = Label::factory()->createOne();
+        $this->get(route('labels.edit', $label))
             ->assertStatus(403);
         $this->actingAs($this->user)
-            ->get(route('labels.edit', $this->label1))
+            ->get(route('labels.edit', $label))
             ->assertOk();
     }
 
-    /**
-     * @covers \App\Http\Controllers\LabelController::update
-     *
-     */
+
     public function testUpdateLabel()
     {
-        $this->patch(route('labels.update', $this->label1), $this->request)
+        $label = Label::factory()->createOne();
+        $this->patch(route('labels.update', $label), $this->request)
             ->assertStatus(403);
 
         $this->followingRedirects()
             ->actingAs($this->user)
-            ->patch(route('labels.update', $this->label1), $this->request)
+            ->patch(route('labels.update', $label), $this->request)
             ->assertOk()
             ->assertSessionDoesntHaveErrors()
             ->assertSee($this->request);
     }
 
-    /**
-     * @covers \App\Http\Controllers\LabelController::destroy
-     *
-     */
     public function testDestroyLabel()
     {
-        $this->delete(route('labels.destroy', $this->label1))
+        $label1 = Label::factory()->createOne();
+        $this->delete(route('labels.destroy', $label1))
             ->assertStatus(403);
 
         $this->followingRedirects()
             ->actingAs($this->user)
-            ->delete(route('labels.destroy', $this->label1))
+            ->delete(route('labels.destroy', $label1))
             ->assertOk()
             ->assertSee('Метка успешно удалена');
+        $this->assertModelMissing($label1);
 
-        $this->assertModelMissing($this->label1);
-
+        $label2 = Label::factory()->has(Task::factory())->createOne();
         $this->followingRedirects()
             ->actingAs($this->user)
-            ->delete(route('labels.destroy', $this->label2))
+            ->delete(route('labels.destroy', $label2))
             ->assertOk()
             ->assertSee('Не удалось удалить метку');
 
-        $this->assertModelExists($this->label2);
+        $this->assertModelExists($label2);
     }
 }

@@ -10,26 +10,30 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
 
+/**
+ * @covers \App\Models\TaskStatus
+ * @covers \App\Http\Controllers\TaskStatusController
+ * @covers \App\Policies\TaskStatusPolicy
+ */
 class TaskStatusTest extends TestCase
 {
     private User $user;
     private array $request;
-    private TaskStatus $taskStatus;
-    private Task $task;
 
     public function setUp(): void
     {
         parent::setUp();
         $this->user = User::factory()->create();
         $this->request = ['name' => 'Testing Status'];
-        $this->taskStatus = TaskStatus::factory()->createOne();
-        $this->task = Task::factory()->createOne();
     }
 
-    /**
-     * @covers \App\Http\Controllers\TaskStatusController::create
-     *
-     */
+    public function testIndexTaskStatus()
+    {
+        $this->get(route('task_statuses.index'))
+            ->assertOk()
+            ->assertViewIs('task_statuses.index');
+    }
+
     public function testCreateStatus()
     {
         $this->get(route('task_statuses.create'))
@@ -37,13 +41,10 @@ class TaskStatusTest extends TestCase
 
         $this->actingAs($this->user)
             ->get(route('task_statuses.create'))
-            ->assertOk();
+            ->assertOk()
+            ->assertViewIs('task_statuses.create');
     }
 
-    /**
-     * @covers \App\Http\Controllers\TaskStatusController::store
-     *
-     */
     public function testStoreStatus()
     {
         $this->post(route('task_statuses.store', $this->request))
@@ -56,29 +57,24 @@ class TaskStatusTest extends TestCase
         $this->assertDatabaseHas('task_statuses', $this->request);
     }
 
-    /**
-     * @covers \App\Http\Controllers\TaskStatusController::edit
-     *
-     */
     public function testEditStatus()
     {
-        $this->get(route('task_statuses.edit', $this->taskStatus))
+        $taskStatus = TaskStatus::factory()->createOne();
+        $this->get(route('task_statuses.edit', $taskStatus))
             ->assertStatus(403);
         $this->actingAs($this->user)
-            ->get(route('task_statuses.edit', $this->taskStatus))
-            ->assertOk();
+            ->get(route('task_statuses.edit', $taskStatus))
+            ->assertOk()
+            ->assertViewIs('task_statuses.edit');
     }
 
-    /**
-     * @covers \App\Http\Controllers\TaskStatusController::update
-     *
-     */
     public function testUpdateStatus()
     {
-        $this->patch(route('task_statuses.update', $this->taskStatus), $this->request)
+        $taskStatus = TaskStatus::factory()->createOne();
+        $this->patch(route('task_statuses.update', $taskStatus), $this->request)
             ->assertStatus(403);
         $this->actingAs($this->user)
-            ->patch(route('task_statuses.update', $this->taskStatus), $this->request)
+            ->patch(route('task_statuses.update', $taskStatus), $this->request)
             ->assertRedirect(route('task_statuses.index'))
             ->assertSessionDoesntHaveErrors();
         $this->get(route('task_statuses.index'))
@@ -86,42 +82,38 @@ class TaskStatusTest extends TestCase
         $this->assertDatabaseHas('task_statuses', $this->request);
     }
 
-    /**
-     * @covers \App\Http\Controllers\TaskStatusController::destroy
-     *
-     */
     public function testDestroyStatusNotAssigned()
     {
-        $this->delete(route('task_statuses.destroy', $this->taskStatus))
+        $taskStatus = TaskStatus::factory()->createOne();
+
+        $this->delete(route('task_statuses.destroy', $taskStatus))
             ->assertStatus(403);
 
         $this->followingRedirects()
             ->actingAs($this->user)
-            ->delete(route('task_statuses.destroy', $this->taskStatus))
+            ->delete(route('task_statuses.destroy', $taskStatus))
             ->assertOk()
             ->assertSee('Статус успешно удалён');
 
-        $this->assertDatabaseMissing('task_statuses', $this->taskStatus->toArray());
+        $this->assertDatabaseMissing('task_statuses', $taskStatus->toArray());
+        $this->assertModelMissing($taskStatus);
     }
 
-    /**
-     * @covers \App\Http\Controllers\TaskStatusController::destroy
-     *
-     */
     public function testDestroyStatusAssigned()
     {
-        $this->task->status()->associate($this->taskStatus);
-        $this->task->save();
+        $taskStatus = TaskStatus::factory()->createOne();
+        Task::factory()->createOne(['status_id' => $taskStatus]);
 
-        $this->delete(route('task_statuses.destroy', $this->taskStatus))
+        $this->delete(route('task_statuses.destroy', $taskStatus))
             ->assertStatus(403);
 
         $this->followingRedirects()
             ->actingAs($this->user)
-            ->delete(route('task_statuses.destroy', $this->taskStatus))
+            ->delete(route('task_statuses.destroy', $taskStatus))
             ->assertOk()
             ->assertSee('Не удалось удалить статус');
 
-        $this->assertDatabaseHas('task_statuses', $this->taskStatus->toArray());
+        $this->assertDatabaseHas('task_statuses', $taskStatus->toArray());
+        $this->assertModelExists($taskStatus);
     }
 }
