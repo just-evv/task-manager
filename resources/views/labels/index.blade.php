@@ -2,7 +2,7 @@
 
 @section('content')
     @include('flash::message')
-    <h1 class="mb-5">Labels</h1>
+    <h1 class="mb-5">{{__('Labels')}}</h1>
     @can('create', App\Models\Label::class)
         <a href="{{ route('labels.create') }}" class="btn btn-primary">{{__('Create new label')}}</a>
     @endcan
