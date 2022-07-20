@@ -12,13 +12,13 @@
         <div class="row g-1">
 
             <div class="col">
-                {{ Form::select('filter[status_id]', $statuses , null, ['placeholder' => __('Status'), 'class' => "form-select me-2"]) }}
+                {{ Form::select('filter[status_id]', $statuses , null, ['placeholder' => __('content.item.status'), 'class' => "form-select me-2"]) }}
             </div>
             <div class="col">
-                {{ Form::select('filter[created_by_id]', $users , null, ['placeholder' => __('Created by'), 'class' => "form-select me-2"]) }}
+                {{ Form::select('filter[created_by_id]', $users , null, ['placeholder' => __('content.item.created_by'), 'class' => "form-select me-2"]) }}
             </div>
             <div class="col">
-                {{ Form::select('filter[assigned_to_id]', $users , null, ['placeholder' => __('Assigned to'), 'class' => "form-select me-2"]) }}
+                {{ Form::select('filter[assigned_to_id]', $users , null, ['placeholder' => __('content.item.assigned_to'), 'class' => "form-select me-2"]) }}
             </div>
             <div class="col">
                 {{ Form::submit(__('Apply'), ['class' => 'btn btn-outline-primary me-2']) }}

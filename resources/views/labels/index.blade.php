@@ -4,7 +4,7 @@
     @include('flash::message')
     <h1 class="mb-5">{{__('content.label.labels')}}</h1>
     @can('create', App\Models\Label::class)
-        <a href="{{ route('labels.create') }}" class="btn btn-primary">{{__('Create new label')}}</a>
+        <a href="{{ route('labels.create') }}" class="btn btn-primary">{{__('content.label.create')}}</a>
     @endcan
     <table class="table me-2">
         <thead>
