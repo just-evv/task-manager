@@ -19,7 +19,6 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    Log::debug('Test debug message');
     return view('index');
 })->name('index');
 

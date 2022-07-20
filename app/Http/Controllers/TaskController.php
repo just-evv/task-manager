@@ -30,7 +30,6 @@ class TaskController extends Controller
     {
         $statuses = TaskStatus::pluck('name', 'id');
         $users = User::pluck('name', 'id');
-        $tasks = Task::all();
 
         $filter = QueryBuilder::for(Task::class)
             ->allowedFilters([
@@ -39,7 +38,7 @@ class TaskController extends Controller
                 AllowedFilter::exact('assigned_to_id')])
             ->paginate(15);
 
-        return view('tasks.index', compact('filter', 'statuses', 'users', 'tasks'));
+        return view('tasks.index', compact('filter', 'statuses', 'users'    ));
     }
 
     /**

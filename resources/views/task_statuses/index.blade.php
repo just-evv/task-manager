@@ -2,7 +2,7 @@
 
 @section('content')
     @include('flash::message')
-    <h1 class="mb-5">{{__('Statuses')}}</h1>
+    <h1 class="mb-5">{{__('content.status.statuses')}}</h1>
     @can('create', App\Models\TaskStatus::class)
     <a href="{{ route('task_statuses.create') }}" class="btn btn-primary">{{__('Create new status')}}</a>
     @endcan
@@ -10,11 +10,11 @@
         <thead>
         <tr>
             <th>{{__('ID')}}</th>
-            <th>{{__('Name')}}</th>
-            <th>{{__('Created at')}}</th>
-            @can('create', App\Models\TaskStatus::class)
+            <th>{{__('content.item.name')}}</th>
+            <th>{{__('content.item.created_at')}}</th>
+            @canany(['update', 'delete'], App\Models\TaskStatus::class)
             <th>{{__('Action')}}</th>
-            @endcan
+            @endcanany
         </tr>
         </thead>
         @foreach($statuses as $status)

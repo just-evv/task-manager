@@ -11,7 +11,7 @@ use Tests\TestCase;
  * @covers \App\Http\Controllers\TaskController
  * @covers \App\Policies\TaskPolicy
  */
-class TaskTest extends TestCase
+class TaskControllerTest extends TestCase
 {
     private User $user;
     private Task $task;
@@ -29,14 +29,14 @@ class TaskTest extends TestCase
         $this->task = Task::factory()->createOne(['created_by_id' => $this->user]);
     }
 
-    public function testTasksIndex()
+    public function testIndex()
     {
         $this->get(route('tasks.index'))
             ->assertOk()
             ->assertViewIs('tasks.index');
     }
 
-    public function testCreateTask()
+    public function testCreate()
     {
         $this->get(route('tasks.create'))
             ->assertStatus(403);
@@ -45,15 +45,16 @@ class TaskTest extends TestCase
             ->get(route('tasks.create'))
             ->assertOk()
             ->assertViewIs('tasks.create');
-        ;
     }
 
-    public function testStoreTask()
+    public function testStore()
     {
-        $this->actingAs($this->user)
+        $this->post(route('tasks.store', $this->request))
+            ->assertStatus(403);
+        $this->followingRedirects()
+            ->actingAs($this->user)
             ->post(route('tasks.store', $this->request))
-            ->assertRedirect(route('tasks.index'));
-        $this->get(route('tasks.index'))
+            ->assertSessionDoesntHaveErrors()
             ->assertSee([$this->request['name']]);
         $this->assertDatabaseHas('tasks', $this->request);
     }
@@ -61,19 +62,30 @@ class TaskTest extends TestCase
     public function testShowTask()
     {
         $this->get(route('tasks.show', $this->task))
-            ->assertSee([$this->task->name]);
+            ->assertSee([$this->task->name])
+            ->assertViewIs('tasks.show');
+    }
+
+    public function testEdit()
+    {
+        $this->get(route('tasks.edit', $this->task))
+            ->assertStatus(403);
+        $this->actingAs($this->user)
+            ->get(route('tasks.edit', $this->task))
+            ->assertOk()
+            ->assertViewIs('tasks.edit');
     }
 
     public function testUpdateTask()
     {
-        $request = ['name' => 'new task',
-            'status_id' => 1];
+        $request = Task::factory()->make()->only(['name', 'description', 'status_id']);
         $this->patch(route('tasks.update', $this->task), $request)
             ->assertStatus(403);
-        $this->actingAs($this->user)
+        $this->followingRedirects()
+            ->actingAs($this->user)
             ->patch(route('tasks.update', $this->task), $request)
-            ->assertRedirect(route('tasks.index'))
-            ->assertSessionDoesntHaveErrors();
+            ->assertSessionDoesntHaveErrors()
+        ->assertViewIs('tasks.index');
         $this->assertDatabaseHas('tasks', $request);
     }
 

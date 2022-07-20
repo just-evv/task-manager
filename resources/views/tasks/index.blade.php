@@ -28,7 +28,7 @@
 
         @can('create', App\Models\Task::class)
             <div class="ms-auto">
-                <a href="{{ route('tasks.create') }}" class="btn btn-primary ml-auto">{{__('Create new task')}}</a>
+                <a href="{{ route('tasks.create') }}" class="btn btn-primary ml-auto">{{__('content.task.create')}}</a>
             </div>
         @endcan
     </div>
@@ -37,14 +37,14 @@
         <thead>
             <tr>
             <th>{{__('ID')}}</th>
-            <th>{{__('Status')}}</th>
-            <th>{{__('Name')}}</th>
-            <th>{{__('Created by')}}</th>
-            <th>{{__('Assigned to')}}</th>
-            <th>{{__('Created at')}}</th>
-            @can('create', App\Models\Task::class)
+            <th>{{ __('content.item.status') }}</th>
+            <th>{{ __('content.item.name') }}</th>
+            <th>{{ __('content.item.created_by') }}</th>
+            <th>{{ __('content.item.assigned_to') }}</th>
+            <th>{{ __('content.item.created_at') }}</th>
+            @canany(['update', 'delete'], App\Models\Task::class)
                 <th>{{__('Action')}}</th>
-            @endcan
+            @endcanany
         </tr>
         </thead>
 

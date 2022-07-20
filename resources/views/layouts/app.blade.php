@@ -8,7 +8,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <meta name="csrf-param" content="_token" />
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>{{ config('app.name', __('Task Manager')) }}</title>
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}" defer></script>
@@ -36,15 +36,15 @@
                     <ul class="navbar-nav me-auto">
                         <li class="nav-item">
                             <a class="nav-link " href="{{ route('tasks.index') }}">
-                                {{__('Tasks')}}                            </a>
+                                {{__('content.task.tasks')}}                            </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link " href="{{ route('task_statuses.index') }}">
-                                {{__('Statuses')}}                            </a>
+                                {{__('content.status.statuses')}}                            </a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link " href="{{ route('labels.index') }}">
-                                {{__('Labels')}}                            </a>
+                                {{__('content.label.labels')}}                            </a>
                         </li>
 
                     </ul>

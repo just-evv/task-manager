@@ -15,7 +15,7 @@ use Tests\TestCase;
  * @covers \App\Http\Controllers\TaskStatusController
  * @covers \App\Policies\TaskStatusPolicy
  */
-class TaskStatusTest extends TestCase
+class TaskStatusControllerTest extends TestCase
 {
     private User $user;
     private array $request;
@@ -27,14 +27,14 @@ class TaskStatusTest extends TestCase
         $this->request = ['name' => 'Testing Status'];
     }
 
-    public function testIndexTaskStatus()
+    public function testIndex()
     {
         $this->get(route('task_statuses.index'))
             ->assertOk()
             ->assertViewIs('task_statuses.index');
     }
 
-    public function testCreateStatus()
+    public function testCreate()
     {
         $this->get(route('task_statuses.create'))
             ->assertStatus(403);
@@ -45,19 +45,20 @@ class TaskStatusTest extends TestCase
             ->assertViewIs('task_statuses.create');
     }
 
-    public function testStoreStatus()
+    public function testStore()
     {
         $this->post(route('task_statuses.store', $this->request))
             ->assertStatus(403);
-        $this->actingAs($this->user)
+        $this->followingRedirects()
+            ->actingAs($this->user)
             ->post(route('task_statuses.store', $this->request))
-            ->assertRedirect(route('task_statuses.index'));
-        $this->get(route('task_statuses.index'))
+            ->assertSessionDoesntHaveErrors()
+            ->assertViewIs('task_statuses.index')
             ->assertSee($this->request);
         $this->assertDatabaseHas('task_statuses', $this->request);
     }
 
-    public function testEditStatus()
+    public function testEdit()
     {
         $taskStatus = TaskStatus::factory()->createOne();
         $this->get(route('task_statuses.edit', $taskStatus))
@@ -68,7 +69,7 @@ class TaskStatusTest extends TestCase
             ->assertViewIs('task_statuses.edit');
     }
 
-    public function testUpdateStatus()
+    public function testUpdate()
     {
         $taskStatus = TaskStatus::factory()->createOne();
         $this->patch(route('task_statuses.update', $taskStatus), $this->request)
