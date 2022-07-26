@@ -78,14 +78,14 @@ class TaskControllerTest extends TestCase
 
     public function testUpdateTask()
     {
-        $request = Task::factory()->make()->only(['name', 'description', 'status_id']);
+        $request = ['name' => 'new task',
+            'status_id' => 1];
         $this->patch(route('tasks.update', $this->task), $request)
             ->assertStatus(403);
-        $this->followingRedirects()
-            ->actingAs($this->user)
+        $this->actingAs($this->user)
             ->patch(route('tasks.update', $this->task), $request)
-            ->assertSessionDoesntHaveErrors()
-        ->assertViewIs('tasks.index');
+            ->assertRedirect(route('tasks.index'))
+            ->assertSessionDoesntHaveErrors();
         $this->assertDatabaseHas('tasks', $request);
     }
 
