@@ -14,39 +14,12 @@
     "Forgot Your Password?": "Забыли пароль?",
     "Remember Me": "Запомнить меня",
 
-    "Tasks": "Задачи",
-    "Statuses": "Статусы",
-    "Labels": "Метки",
-
-    "Task review": "Просмотр задачи",
-    "Create new task": "Создать задачу",
-    "Edit task": "Изменение задачи",
-
-    "Create new status": "Создать статус",
-    "Edit status": "Изменение статуса",
-    "Create new label": "Создать метку",
-    "Edit label": "Изменение метки",
-
-    "Name": "Имя",
-    "Status": "Статус",
-    "Description": "Описание",
-    "Label": "Метки",
-    "Created by": "Автор",
-    "Assigned to": "Исполнитель",
-    "Created at": "Дата создания",
     "Action": "Действия",
-
     "Apply": "Применить",
     "Edit": "Изменить",
     "Delete": "Удалить",
     "Create": "Создать",
-
     "Update": "Обновить",
 
-    "Are you sure?": "Вы уверены?",
-
-    "The password must be at least :min characters.": "Пароль должен иметь длину не менее :min символов"
-
-
-
+    "Are you sure?": "Вы уверены?"
 }

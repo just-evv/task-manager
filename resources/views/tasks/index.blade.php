@@ -12,13 +12,13 @@
         <div class="row g-1">
 
             <div class="col">
-                {{ Form::select('filter[status_id]', $statuses , null, ['placeholder' => __('Status'), 'class' => "form-select me-2"]) }}
+                {{ Form::select('filter[status_id]', $statuses , null, ['placeholder' => __('content.item.status'), 'class' => "form-select me-2"]) }}
             </div>
             <div class="col">
-                {{ Form::select('filter[created_by_id]', $users , null, ['placeholder' => __('Created by'), 'class' => "form-select me-2"]) }}
+                {{ Form::select('filter[created_by_id]', $users , null, ['placeholder' => __('content.item.created_by'), 'class' => "form-select me-2"]) }}
             </div>
             <div class="col">
-                {{ Form::select('filter[assigned_to_id]', $users , null, ['placeholder' => __('Assigned to'), 'class' => "form-select me-2"]) }}
+                {{ Form::select('filter[assigned_to_id]', $users , null, ['placeholder' => __('content.item.assigned_to'), 'class' => "form-select me-2"]) }}
             </div>
             <div class="col">
                 {{ Form::submit(__('Apply'), ['class' => 'btn btn-outline-primary me-2']) }}
@@ -28,7 +28,7 @@
 
         @can('create', App\Models\Task::class)
             <div class="ms-auto">
-                <a href="{{ route('tasks.create') }}" class="btn btn-primary ml-auto">{{__('Create new task')}}</a>
+                <a href="{{ route('tasks.create') }}" class="btn btn-primary ml-auto">{{__('content.task.create')}}</a>
             </div>
         @endcan
     </div>
@@ -37,14 +37,14 @@
         <thead>
             <tr>
             <th>{{__('ID')}}</th>
-            <th>{{__('Status')}}</th>
-            <th>{{__('Name')}}</th>
-            <th>{{__('Created by')}}</th>
-            <th>{{__('Assigned to')}}</th>
-            <th>{{__('Created at')}}</th>
-            @can('create', App\Models\Task::class)
+            <th>{{ __('content.item.status') }}</th>
+            <th>{{ __('content.item.name') }}</th>
+            <th>{{ __('content.item.created_by') }}</th>
+            <th>{{ __('content.item.assigned_to') }}</th>
+            <th>{{ __('content.item.created_at') }}</th>
+            @canany(['update', 'delete'], App\Models\Task::class)
                 <th>{{__('Action')}}</th>
-            @endcan
+            @endcanany
         </tr>
         </thead>
 

@@ -13,7 +13,7 @@ use Tests\TestCase;
  * @covers \App\Http\Controllers\LabelController
  * @covers \App\Policies\LabelPolicy
  */
-class LabelTest extends TestCase
+class LabelControllerTest extends TestCase
 {
     private Model $user;
     private array $request;
@@ -28,13 +28,13 @@ class LabelTest extends TestCase
         ];
     }
 
-    public function testIndexLabel()
+    public function testIndex()
     {
         $this->get(route('labels.index'))
             ->assertOk();
     }
 
-    public function testCreateLabel()
+    public function testCreate()
     {
         $this->get(route('labels.create'))
             ->assertStatus(403);
@@ -43,7 +43,7 @@ class LabelTest extends TestCase
             ->assertOk();
     }
 
-    public function testStoreLabel()
+    public function testStore()
     {
         $this->post(route('labels.store', $this->request))
             ->assertStatus(403);
@@ -55,18 +55,19 @@ class LabelTest extends TestCase
         $this->assertDatabaseHas('labels', $this->request);
     }
 
-    public function testEditLabel()
+    public function testEdit()
     {
         $label = Label::factory()->createOne();
         $this->get(route('labels.edit', $label))
             ->assertStatus(403);
         $this->actingAs($this->user)
             ->get(route('labels.edit', $label))
-            ->assertOk();
+            ->assertOk()
+            ->assertViewIs('labels.edit');
     }
 
 
-    public function testUpdateLabel()
+    public function testUpdate()
     {
         $label = Label::factory()->createOne();
         $this->patch(route('labels.update', $label), $this->request)
@@ -80,7 +81,7 @@ class LabelTest extends TestCase
             ->assertSee($this->request);
     }
 
-    public function testDestroyLabel()
+    public function testDestroy()
     {
         $label1 = Label::factory()->createOne();
         $this->delete(route('labels.destroy', $label1))

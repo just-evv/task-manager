@@ -2,20 +2,20 @@
 
 @section('content')
     @include('flash::message')
-    <h1 class="mb-5">{{__('Labels')}}</h1>
+    <h1 class="mb-5">{{__('content.label.labels')}}</h1>
     @can('create', App\Models\Label::class)
-        <a href="{{ route('labels.create') }}" class="btn btn-primary">{{__('Create new label')}}</a>
+        <a href="{{ route('labels.create') }}" class="btn btn-primary">{{__('content.label.create')}}</a>
     @endcan
     <table class="table me-2">
         <thead>
         <tr>
             <th>{{__('ID')}}</th>
-            <th>{{__('Name')}}</th>
-            <th>{{__('Description')}}</th>
-            <th>{{__('Created at')}}</th>
-            @can('create', App\Models\Label::class)
+            <th>{{__('content.item.name')}}</th>
+            <th>{{__('content.item.description')}}</th>
+            <th>{{__('content.item.created_at')}}</th>
+            @canany(['update', 'delete'], App\Models\Label::class)
                 <th>{{__('Action')}}</th>
-            @endcan
+            @endcanany
         </tr>
         </thead>
         @foreach($labels as $label)
