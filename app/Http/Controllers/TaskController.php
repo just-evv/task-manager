@@ -9,8 +9,10 @@ use App\Models\Task;
 use App\Models\TaskStatus;
 use App\Models\User;
 use Illuminate\Contracts\View\View;
+use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\ValidationException;
 use Spatie\QueryBuilder\AllowedFilter;
 use Spatie\QueryBuilder\QueryBuilder;
@@ -21,24 +23,29 @@ class TaskController extends Controller
     {
         $this->authorizeResource(Task::class);
     }
+
     /**
      * Display a listing of the resource.
      *
+     * @param Request $request
      * @return View
      */
-    public function index(): View
+    public function index(Request $request): View
     {
         $statuses = TaskStatus::pluck('name', 'id');
         $users = User::pluck('name', 'id');
 
-        $filter = QueryBuilder::for(Task::class)
+        $tasks = QueryBuilder::for(Task::class)
             ->allowedFilters([
                 AllowedFilter::exact('status_id'),
                 AllowedFilter::exact('created_by_id'),
                 AllowedFilter::exact('assigned_to_id')])
+            ->orderBy('id')
             ->paginate(15);
 
-        return view('tasks.index', compact('filter', 'statuses', 'users'));
+        $request->flash();
+
+        return view('tasks.index', compact('tasks', 'statuses', 'users'));
     }
 
     /**
@@ -72,7 +79,7 @@ class TaskController extends Controller
         $task->creator()->associate($user);
         $task->save();
 
-        if (array_key_exists('labels', $data)) {
+        if (array_key_exists('labels', $data) && !is_null($data['labels'][0])) {
             $task->labels()->sync($data['labels']);
             $task->save();
         }
@@ -120,8 +127,12 @@ class TaskController extends Controller
         $task->save();
 
         if (array_key_exists('labels', $data)) {
-            $task->labels()->sync($data['labels']);
-            $task->save();
+            if (is_null($data['labels'][0])) {
+                $task->labels()->detach();
+            } else {
+                $task->labels()->sync($data['labels']);
+                $task->save();
+            }
         }
 
         flash(__('messages.task.updated'))->success();

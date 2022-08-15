@@ -82,7 +82,7 @@ class LabelController extends Controller
         $label->fill($data);
         $label->save();
 
-        flash(__('messages.label.updated'));
+        flash(__('messages.label.updated'))->success();
         return redirect()->route('labels.index');
     }
 

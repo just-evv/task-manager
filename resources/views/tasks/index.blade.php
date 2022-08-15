@@ -12,13 +12,13 @@
         <div class="row g-1">
 
             <div class="col">
-                {{ Form::select('filter[status_id]', $statuses , null, ['placeholder' => __('content.item.status'), 'class' => "form-select me-2"]) }}
+                    {{ Form::select('filter[status_id]', $statuses , old('filter[status_id]'), ['placeholder' =>  __('content.item.status'), 'class' => "form-select me-2"]) }}
             </div>
             <div class="col">
-                {{ Form::select('filter[created_by_id]', $users , null, ['placeholder' => __('content.item.created_by'), 'class' => "form-select me-2"]) }}
+                {{ Form::select('filter[created_by_id]', $users , old('filter[created_by_id]'), ['placeholder' => __('content.item.created_by'), 'class' => "form-select me-2"]) }}
             </div>
             <div class="col">
-                {{ Form::select('filter[assigned_to_id]', $users , null, ['placeholder' => __('content.item.assigned_to'), 'class' => "form-select me-2"]) }}
+                {{ Form::select('filter[assigned_to_id]', $users , old('filter[assigned_to_id]'), ['placeholder' => __('content.item.assigned_to'), 'class' => "form-select me-2"]) }}
             </div>
             <div class="col">
                 {{ Form::submit(__('Apply'), ['class' => 'btn btn-outline-primary me-2']) }}
@@ -49,7 +49,7 @@
         </thead>
 
         <tbody>
-            @foreach ($filter as $task)
+            @foreach ($tasks as $task)
             <tr>
                 <td>{{ $task->id }}</td>
                 <td>{{ $task->status->name }}</td>
@@ -81,6 +81,6 @@
 
     </table>
 
-    {{ $filter->links('pagination::bootstrap-4') }}
+    {{ $tasks->links('pagination::bootstrap-4') }}
 
 @endsection
