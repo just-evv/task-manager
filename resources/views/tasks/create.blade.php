@@ -14,7 +14,7 @@
 
         {{ Form::bsSelectOne('assigned_to_id', __('content.item.assigned_to'), $users, null, ['placeholder' => '----------']) }}
 
-        {{ Form::bsSelectMany('labels', __('content.item.labels'), $labels, null,['id' => 'labels']) }}
+        {{ Form::bsSelectMany('labels', __('content.item.labels'), $labels, null, ['id' => 'labels', 'placeholder' => '']) }}
 
         {{ Form::submit(__('Create'),  ['class' => 'btn btn-primary mt-3']) }}
 
