@@ -39,7 +39,6 @@ class TaskController extends Controller
             AllowedFilter::exact('created_by_id'),
             AllowedFilter::exact('assigned_to_id')
         ];
-
         $tasks = QueryBuilder::for(Task::class)
             ->allowedFilters($filters)
             ->orderBy('id')
