@@ -34,18 +34,19 @@ class TaskController extends Controller
     {
         $statuses = TaskStatus::pluck('name', 'id');
         $users = User::pluck('name', 'id');
-
+        $filters = ['name',
+            AllowedFilter::exact('status_id'),
+            AllowedFilter::exact('created_by_id'),
+            AllowedFilter::exact('assigned_to_id')
+        ];
         $tasks = QueryBuilder::for(Task::class)
-            ->allowedFilters([
-                AllowedFilter::exact('status_id'),
-                AllowedFilter::exact('created_by_id'),
-                AllowedFilter::exact('assigned_to_id')])
+            ->allowedFilters($filters)
             ->orderBy('id')
             ->paginate(15);
 
         $request->flash();
 
-        return view('tasks.index', compact('tasks', 'statuses', 'users'));
+        return view('tasks.index', compact('tasks', 'statuses', 'users', 'filters'));
     }
 
     /**
