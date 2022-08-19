@@ -45,7 +45,7 @@ class TaskController extends Controller
             ->paginate(15);
 
         $request->flash();
-        
+
         return view('tasks.index', compact('tasks', 'statuses', 'users', 'filters'));
     }
 
