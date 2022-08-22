@@ -18,11 +18,12 @@
     <p>{{ __('content.item.status') }}: {{ $task->status->name }}</p>
     <p>{{ __('content.item.description') }}: {{ $task->description }}</p>
     <p>{{  __('content.item.assigned_to') }}: {{ $task->assignedUser->name ?? ''}}</p>
-    <p>{{ __('content.item.labels') }}: </p>
-    <ul>
-        @foreach($task->labels as $label)
-            <li>{{ $label->name }}</li>
-        @endforeach
-    </ul>
-
+    @if ($task->labels->isNotEmpty())
+        <p>{{ __('content.item.labels') }}: </p>
+        <ul>
+            @foreach($task->labels as $label)
+                <li>{{ $label->name }}</li>
+            @endforeach
+        </ul>
+    @endif
 @endsection
