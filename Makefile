@@ -26,6 +26,7 @@ setup:
 	docker-compose up -d
 	docker-compose exec -T laravel.test php artisan migrate
 	npm install
+	npm audit fix
 
 
 test-coverage:
