@@ -124,17 +124,12 @@ class TaskController extends Controller
     public function update(UpdateTaskRequest $request, Task $task): RedirectResponse
     {
         $data = $request->validated();
+        $labels = collect($request->input('labels'))
+            ->filter(fn($label) => $label !== null);
+
+        $task->labels()->sync($labels);
         $task->fill($data);
         $task->save();
-
-        if (array_key_exists('labels', $data)) {
-            if (is_null($data['labels'][0])) {
-                $task->labels()->detach();
-            } else {
-                $task->labels()->sync($data['labels']);
-                $task->save();
-            }
-        }
 
         flash(__('messages.task.updated'))->success();
 

@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Label;
 use App\Models\Task;
 use App\Models\User;
 use Tests\TestCase;
@@ -26,7 +27,9 @@ class TaskControllerTest extends TestCase
             'description' => 'description',
             'status_id' => 1,
         ];
-        $this->task = Task::factory()->createOne(['created_by_id' => $this->user]);
+        $this->task = Task::factory()
+            ->hasAttached(Label::factory()->count(2))
+            ->createOne(['created_by_id' => $this->user]);
     }
 
     public function testIndex()
@@ -87,6 +90,22 @@ class TaskControllerTest extends TestCase
             ->assertRedirect(route('tasks.index'))
             ->assertSessionDoesntHaveErrors();
         $this->assertDatabaseHas('tasks', $request);
+    }
+
+    public function testUpdateTaskRemoveLabels()
+    {
+        $request = [
+            'name' => $this->task->name,
+            'status_id' => 1,
+            'labels' => [null]
+        ];
+        $this->patch(route('tasks.update', $this->task), $request)
+            ->assertStatus(403);
+        $this->actingAs($this->user)
+            ->patch(route('tasks.update', $this->task), $request)
+            ->assertRedirect(route('tasks.index'))
+            ->assertSessionDoesntHaveErrors();
+        $this->assertCount(0, $this->task->labels()->get());
     }
 
     public function testDestroyTask()
