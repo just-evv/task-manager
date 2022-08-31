@@ -1,4 +1,3 @@
-require('./bootstrap');
+import './bootstrap';
+import '../css/app.css';
 
-const ujs = require('@rails/ujs');
-ujs.start();
