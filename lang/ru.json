@@ -5,14 +5,16 @@
     "Learn more": "Узнать больше",
 
     "Login": "Вход",
-    "Log In": "Войти",
-    "Register": "Зарегистрироваться",
+    "Log in": "Войти",
+    "Register": "Зарегистрировать",
     "Logout": "Выход",
-    "Please confirm your password before continuing.": "Пожалуйста подствердите пароль",
+    "Please confirm your password before continuing.": "Пожалуйста подтвердите пароль",
     "Password": "Пароль",
     "Confirm Password": "Подтверждение",
-    "Forgot Your Password?": "Забыли пароль?",
-    "Remember Me": "Запомнить меня",
+    "Forgot your password?": "Забыли пароль?",
+    "Remember me": "Запомнить меня",
+    "Already registered?": "Уже зарегистрированы?",
+    "Email Password Reset Link": "Сбросить пароль",
 
     "Action": "Действия",
     "Apply": "Применить",
@@ -21,5 +23,7 @@
     "Create": "Создать",
     "Update": "Обновить",
 
-    "Are you sure?": "Вы уверены?"
+    "Are you sure?": "Вы уверены?",
+    "Whoops! Something went wrong.": "Упс! Что-то пошло не так:",
+    "Name": "Имя"
 }
