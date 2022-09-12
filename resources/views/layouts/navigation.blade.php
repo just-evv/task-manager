@@ -28,11 +28,16 @@
         <div class="flex items-center lg:order-2">
             @guest
                 @if (Route::has('login'))
-                        <a class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" href="{{ route('login') }}">{{ __('Login') }}</a>
+                    <x-button>
+                        <a href="{{ route('login') }}">{{ __('Login') }}</a>
+                    </x-button>
+
                 @endif
 
                 @if (Route::has('register'))
-                        <a class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-2" href="{{ route('register') }}">{{ __('Register') }}</a>
+                    <x-button>
+                        <a href="{{ route('register') }}">{{ __('Register') }}</a>
+                    </x-button>
                 @endif
             @else
                 <div class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-2">
