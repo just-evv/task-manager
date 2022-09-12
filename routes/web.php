@@ -28,4 +28,11 @@ Route::resource('tasks', TaskController::class);
 
 Route::resource('labels', LabelController::class)->except(['show']);
 
-Auth::routes();
+Route::get('/dashboard', function () {
+    return view('dashboard');
+})->middleware(['auth'])->name('dashboard');
+
+require __DIR__.'/auth.php';
+
+
+//Auth::routes();
