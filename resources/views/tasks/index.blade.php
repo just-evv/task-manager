@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-
+    @include('flash::message')
     <div class="grid col-span-full">
 
     <h1 class="text-5xl font-semibold mb-5">
@@ -31,9 +31,12 @@
 
         @can('create', App\Models\Task::class)
             <div class="ml-auto">
-                <a href="{{ route('tasks.create') }}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-2">
-                    {{__('content.task.create')}}
-                </a>
+                <x-button>
+                    <a href="{{ route('tasks.create') }}">
+                        {{__('content.task.create')}}
+                    </a>
+                </x-button>
+
             </div>
         @endcan
     </div>
@@ -69,13 +72,14 @@
                 @can('update', $task)
                     <td>
                         <a class="text-blue-600 hover:text-blue-900" href="{{ route('tasks.edit', $task) }}">{{ __('Edit') }}</a>
-                        @can('delete', $task)
-                            <a method="delete"
+
+                            <a class="text-red-600 hover:text-red-900"
                                href="{{ route('tasks.destroy', $task) }}"
-                               class="text-red-600 hover:text-red-900">
+                               data-confirm="{{ __("Are you sure?") }}"
+                               data-method="delete"
+                               rel="nofollow">
                                 {{__('Delete')}}
                             </a>
-                        @endcan
                     </td>
                 @endcan
             </tr>

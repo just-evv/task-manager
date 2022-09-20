@@ -85,7 +85,7 @@ class TaskController extends Controller
             $task->save();
         }
 
-        flash(__('messages.task.created'))->success();
+        flash()->success(__('messages.task.created'));
         return redirect()->route('tasks.index');
     }
 
@@ -145,7 +145,8 @@ class TaskController extends Controller
     public function destroy(Task $task): RedirectResponse
     {
         $task->labels()->detach();
-        $task->delete();
+        //$task->delete();
+        Task::destroy($task->id);
         flash(__('messages.task.deleted'))->success();
         return redirect()->route('tasks.index');
     }

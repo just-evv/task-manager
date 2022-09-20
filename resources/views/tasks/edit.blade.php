@@ -1,22 +1,24 @@
 @extends('layouts.app')
 
 @section('content')
+    <div class="grid col-span-full">
+        <h1 class="text-3xl font-semibold mb-5">{{__('content.task.edit')}}</h1>
 
-    <h1 class="mb-5">{{__('content.task.edit')}}</h1>
+            {{ Form::model($task, ['route' => ['tasks.update', $task], 'method' => 'PATCH', 'class' => "w-50"]) }}
+        <div class="'flex flex-col">
+            {{ Form::bsText('name', __('content.item.name')) }}
 
-        {{ Form::model($task, ['route' => ['tasks.update', $task], 'method' => 'PATCH', 'class' => "form-group mb-3"]) }}
+            {{ Form::bsTextarea('description', __('content.item.description')) }}
 
-        {{ Form::bsText('name', __('content.item.name')) }}
+            {{ Form::bsSelectOne('status_id', __('content.item.status'), $statuses, null, ['placeholder' => '----------']) }}
 
-        {{ Form::bsTextarea('description', __('content.item.description'), null , ['rows' => '10']) }}
+            {{ Form::bsSelectOne('assigned_to_id', __('content.item.assigned_to'), $users, null, ['placeholder' => '----------']) }}
 
-        {{ Form::bsSelectOne('status_id', __('content.item.status'), $statuses, null, ['placeholder' => '----------']) }}
+            {{ Form::bsSelectMany('labels', __('content.item.labels'), $labels, null,['id' => 'labels', 'placeholder' => '']) }}
 
-        {{ Form::bsSelectOne('assigned_to_id', __('content.item.assigned_to'), $users, null, ['placeholder' => '----------']) }}
+            {{ Form::bsSubmitBtn(__('Update')) }}
+            {{ Form::close() }}
+        </div>
 
-        {{ Form::bsSelectMany('labels', __('content.item.labels'), $labels, null,['id' => 'labels', 'placeholder' => '']) }}
-
-        {{ Form::submit(__('Update'), ['class' => 'btn btn-primary mt-3']) }}
-        {{ Form::close() }}
-
+    </div>
 @endsection
