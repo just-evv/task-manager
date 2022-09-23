@@ -34,13 +34,13 @@
                 @canany(['update', 'delete'], $status)
                     <td>
                         <a class="text-blue-600 hover:text-blue-900" href="{{ route('task_statuses.edit', $status) }}">{{__('Edit')}}</a>
-                        <a class="text-red-600 hover:text-red-900"
-                           href="{{ route('task_statuses.destroy', $status) }}"
-                           data-confirm="{{ __("Are you sure?") }}"
-                           data-method="delete"
-                           rel="nofollow">
-                            {{__('Delete')}}
-                        </a>
+                        <form action="{{ route('task_statuses.destroy', $status) }}" method="POST">
+                            @csrf
+                            @method('DELETE')
+                            <button class="text-red-600 hover:text-red-900" onclick="return confirm('{{ __('Are you sure?') }}')" type="submit">
+                                {{ __('Delete') }}
+                            </button>
+                        </form>
                     </td>
                 @endcanany
 
