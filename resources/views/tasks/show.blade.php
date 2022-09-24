@@ -1,8 +1,9 @@
 @extends('layouts.app')
 
 @section('content')
+    <div class="grid col-span-full">
 
-    <h1 class="mb-5">{{ __('content.task.review') }}: {{ $task->name }}</h1>
+    <h1 class="text-5xl font-semibold mb-5">{{ __('content.task.review') }}: {{ $task->name }}</h1>
 
     @if ($errors->any())
         <div>
@@ -14,16 +15,19 @@
         </div>
     @endif
 
-    <p>{{ __('content.item.name') }}: {{ $task->name }}</p>
-    <p>{{ __('content.item.status') }}: {{ $task->status->name }}</p>
-    <p>{{ __('content.item.description') }}: {{ $task->description }}</p>
-    <p>{{  __('content.item.assigned_to') }}: {{ $task->assignedUser->name ?? ''}}</p>
+        <p><span class="font-medium">{{ __('content.item.name') }}:</span> {{ $task->name }}</p>
+        <p><span class="font-black">{{ __('content.item.status') }}:</span> {{ $task->status->name }}</p>
+        <p><span class="font-black">{{ __('content.item.description') }}:</span> {{ $task->description }}</p>
+        <p><span class="font-black">{{  __('content.item.assigned_to') }}:</span> {{ $task->assignedUser->name ?? ''}}</p>
     @if ($task->labels->isNotEmpty())
-        <p>{{ __('content.item.labels') }}: </p>
-        <ul>
+            <p><span class="font-black">{{ __('content.item.labels') }}:</span> </p>
+        <div>
             @foreach($task->labels as $label)
-                <li>{{ $label->name }}</li>
+                <div class="text-xs inline-flex items-center font-bold leading-sm uppercase px-3 py-1 bg-blue-200 text-blue-700 rounded-full">
+                    {{ $label->name }}
+                </div>
             @endforeach
-        </ul>
+        </div>
     @endif
+    </div>
 @endsection

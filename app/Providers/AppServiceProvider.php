@@ -28,6 +28,7 @@ class AppServiceProvider extends ServiceProvider
         if (env('APP_ENV') !== 'local') {
             URL::forceScheme('https');
         }
+
         FormFacade::component(
             'bsText',
             'components.form.text',
@@ -50,6 +51,12 @@ class AppServiceProvider extends ServiceProvider
             'bsSelectMany',
             'components.form.selectMany',
             ['name', 'text' ?? 'name', 'array', 'value' => null, 'attributes' => []]
+        );
+
+        FormFacade::component(
+            'bsSubmitBtn',
+            'components.form.submitBtn',
+            ['text', 'attributes' => []]
         );
     }
 }
