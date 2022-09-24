@@ -1,4 +1,3 @@
 import '../css/app.css';
 
-import { ujs } from '@rails/ujs';
-ujs.start();
+import Rails from '@rails/ujs';
