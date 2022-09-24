@@ -72,7 +72,7 @@
                 @can('update', $task)
                     <td>
                         <a class="text-blue-600 hover:text-blue-900" href="{{ route('tasks.edit', $task) }}">{{ __('Edit') }}</a>
-
+                        @can('delete', $task)
                             <a class="text-red-600 hover:text-red-900"
                                href="{{ route('tasks.destroy', $task) }}"
                                data-confirm="{{ __("Are you sure?") }}"
@@ -80,6 +80,7 @@
                                rel="nofollow">
                                 {{__('Delete')}}
                             </a>
+                        @endcan
                     </td>
                 @endcan
             </tr>
