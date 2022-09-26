@@ -1,8 +1,8 @@
 @extends('layouts.app')
 
 @section('content')
-    @include('flash::message')
-    <div class="grid col-span-full">
+
+        @include('flash::message')
     <h1 class="text-5xl font-semibold mb-5">{{__('content.status.statuses')}}</h1>
 
     @can('create', App\Models\TaskStatus::class)
@@ -49,5 +49,4 @@
         </tbody>
 
     </table>
-    </div>
 @endsection

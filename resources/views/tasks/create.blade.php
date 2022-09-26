@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="grid col-span-full">
         <h1 class="text-3xl font-semibold mb-5">{{__('content.task.create')}}</h1>
 
     {{ Form::model($task, ['route' => 'tasks.store', 'class' => "w-50"]) }}
@@ -19,5 +18,4 @@
         {{ Form::bsSubmitBtn(__('Create')) }}
 
     {{ Form::close() }}
-    </div>
 @endsection

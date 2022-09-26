@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="grid col-span-full">
 
     <h1 class="text-5xl font-semibold mb-5">{{ __('content.task.review') }}: {{ $task->name }}</h1>
 
@@ -29,5 +28,4 @@
             @endforeach
         </div>
     @endif
-    </div>
 @endsection

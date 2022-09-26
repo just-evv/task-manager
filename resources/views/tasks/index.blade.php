@@ -2,7 +2,6 @@
 
 @section('content')
     @include('flash::message')
-    <div class="grid col-span-full">
 
     <h1 class="text-5xl font-semibold mb-5">
         {{__('content.task.tasks')}}
@@ -90,5 +89,4 @@
     </table>
 
     {{ $tasks->links('pagination::bootstrap-4') }}
-    </div>
 @endsection

@@ -2,7 +2,6 @@
 
 @section('content')
     @include('flash::message')
-    <div class="grid col-span-full">
     <h1 class="text-5xl font-semibold mb-5">{{__('content.label.labels')}}</h1>
     @can('create', App\Models\Label::class)
         <div class="'mr-auto">
@@ -49,5 +48,4 @@
         </tbody>
 
     </table>
-    </div>
 @endsection

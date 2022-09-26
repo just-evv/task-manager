@@ -1,7 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-    <div class="grid col-span-full">
         <h1 class="text-3xl font-semibold mb-5">{{__('content.task.edit')}}</h1>
 
             {{ Form::model($task, ['route' => ['tasks.update', $task], 'method' => 'PATCH', 'class' => "w-50"]) }}
@@ -20,5 +19,4 @@
             {{ Form::close() }}
         </div>
 
-    </div>
 @endsection
