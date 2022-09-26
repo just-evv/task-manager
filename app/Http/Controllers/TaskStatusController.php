@@ -9,7 +9,6 @@ use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 
@@ -60,7 +59,7 @@ class TaskStatusController extends Controller
         $taskStatus->fill($data);
         $taskStatus->save();
 
-        flash(__('messages.status.created'))->success();
+        flash()->success(__('messages.status.created'));
         return redirect()->route('task_statuses.index');
     }
 
@@ -92,7 +91,7 @@ class TaskStatusController extends Controller
         $taskStatus->fill($data);
         $taskStatus->save();
 
-        flash(__('messages.status.updated'));
+        flash()->success(__('messages.status.updated'));
         return redirect()->route('task_statuses.index');
     }
 
@@ -106,11 +105,11 @@ class TaskStatusController extends Controller
     {
         if (!$taskStatus->tasks()->exists()) {
             $taskStatus->delete();
-            flash(__('messages.status.deleted'))->success();
+            flash()->success(__('messages.status.deleted'));
             return redirect()->route('task_statuses.index');
         }
 
-         flash(__('messages.status.unsuccessful'))->warning();
+         flash()->warning(__('messages.status.unsuccessful'));
          return redirect()->route('task_statuses.index');
     }
 }
