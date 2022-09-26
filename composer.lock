@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "80d8b91364dde1b7fa34ad78b009456d",
+    "content-hash": "72fdf49dbd0d11bb1b727d8d81407cc0",
     "packages": [
         {
             "name": "brick/math",
@@ -967,41 +967,44 @@
             "time": "2022-06-27T23:21:15+00:00"
         },
         {
-            "name": "josegus/laravel-flash",
-            "version": "1.3.0",
+            "name": "laracasts/flash",
+            "version": "3.2.1",
             "source": {
                 "type": "git",
-                "url": "https://github.com/josegus/laravel-flash.git",
-                "reference": "76148ea4fc818499f485d9ad99f15cfed60f1185"
+                "url": "https://github.com/laracasts/flash.git",
+                "reference": "f64a8d97f901fdb3ce8eb9b28c5308a726455467"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/josegus/laravel-flash/zipball/76148ea4fc818499f485d9ad99f15cfed60f1185",
-                "reference": "76148ea4fc818499f485d9ad99f15cfed60f1185",
+                "url": "https://api.github.com/repos/laracasts/flash/zipball/f64a8d97f901fdb3ce8eb9b28c5308a726455467",
+                "reference": "f64a8d97f901fdb3ce8eb9b28c5308a726455467",
                 "shasum": ""
             },
             "require": {
-                "illuminate/session": "^9.0",
-                "php": "^8.0"
+                "illuminate/support": "~5.0|^6.0|^7.0|^8.0|^9.0",
+                "php": ">=5.4.0"
             },
             "require-dev": {
-                "friendsofphp/php-cs-fixer": "^3.0",
-                "orchestra/testbench": "^7.0"
+                "mockery/mockery": "dev-master",
+                "phpunit/phpunit": "^6.1|^9.5.10"
             },
             "type": "library",
             "extra": {
                 "laravel": {
                     "providers": [
-                        "JoseGus\\LaravelFlash\\LaravelFlashServiceProvider"
-                    ]
+                        "Laracasts\\Flash\\FlashServiceProvider"
+                    ],
+                    "aliases": {
+                        "Flash": "Laracasts\\Flash\\Flash"
+                    }
                 }
             },
             "autoload": {
                 "files": [
-                    "helpers/flash.php"
+                    "src/Laracasts/Flash/functions.php"
                 ],
-                "psr-4": {
-                    "JoseGus\\LaravelFlash\\": "src/"
+                "psr-0": {
+                    "Laracasts\\Flash": "src/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -1010,15 +1013,16 @@
             ],
             "authors": [
                 {
-                    "name": "Gustavo",
-                    "email": "jgvv15@gmail.com"
+                    "name": "Jeffrey Way",
+                    "email": "jeffrey@laracasts.com"
                 }
             ],
+            "description": "Easy flash notifications",
             "support": {
-                "issues": "https://github.com/josegus/laravel-flash/issues",
-                "source": "https://github.com/josegus/laravel-flash/tree/1.3.0"
+                "issues": "https://github.com/laracasts/flash/issues",
+                "source": "https://github.com/laracasts/flash/tree/3.2.1"
             },
-            "time": "2022-06-13T00:09:16+00:00"
+            "time": "2022-01-31T16:01:37+00:00"
         },
         {
             "name": "laravel/breeze",

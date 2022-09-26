@@ -59,7 +59,7 @@ class TaskStatusController extends Controller
         $taskStatus->fill($data);
         $taskStatus->save();
 
-        flash()->success(__('messages.status.created'));
+        flash(__('messages.status.created'))->success();
         return redirect()->route('task_statuses.index');
     }
 
@@ -91,7 +91,7 @@ class TaskStatusController extends Controller
         $taskStatus->fill($data);
         $taskStatus->save();
 
-        flash()->success(__('messages.status.updated'));
+        flash(__('messages.status.updated'))->success();
         return redirect()->route('task_statuses.index');
     }
 
@@ -105,11 +105,11 @@ class TaskStatusController extends Controller
     {
         if (!$taskStatus->tasks()->exists()) {
             $taskStatus->delete();
-            flash()->success(__('messages.status.deleted'));
+            flash(__('messages.status.deleted'))->success();
             return redirect()->route('task_statuses.index');
         }
 
-         flash()->warning(__('messages.status.unsuccessful'));
+         flash(__('messages.status.unsuccessful'))->warning();
          return redirect()->route('task_statuses.index');
     }
 }

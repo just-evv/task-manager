@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    <x-flash::message />
+    @include('flash::message')
     <div class="grid col-span-full">
     <h1 class="text-5xl font-semibold mb-5">{{__('content.status.statuses')}}</h1>
 

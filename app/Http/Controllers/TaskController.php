@@ -85,7 +85,7 @@ class TaskController extends Controller
             $task->save();
         }
 
-        flash()->success(__('messages.task.created'));
+        flash(__('messages.task.created'))->success();
         return redirect()->route('tasks.index');
     }
 
