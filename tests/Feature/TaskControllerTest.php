@@ -2,9 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Models\Label;
-use App\Models\Task;
-use App\Models\User;
+use App\Models\{Label, Task, User};
 use Tests\TestCase;
 
 /**

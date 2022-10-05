@@ -2,7 +2,6 @@
 
 @section('content')
 
-        @include('flash::message')
     <h1 class="text-5xl font-semibold mb-5">{{__('content.status.statuses')}}</h1>
 
     @can('create', App\Models\TaskStatus::class)

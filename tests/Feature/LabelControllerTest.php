@@ -2,10 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Models\Label;
-use App\Models\Task;
-use App\Models\User;
-use Illuminate\Database\Eloquent\Model;
+use App\Models\{Label, Task, User};
 use Tests\TestCase;
 
 /**
@@ -15,7 +12,7 @@ use Tests\TestCase;
  */
 class LabelControllerTest extends TestCase
 {
-    private Model $user;
+    private User $user;
     private array $request;
 
     public function setUp(): void

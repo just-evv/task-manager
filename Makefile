@@ -14,7 +14,7 @@ migrate:
 	./vendor/bin/sail artisan migrate
 
 lint:
-	composer run-script phpcs -- --standard=PSR12 app tests
+	composer exec phpcs -- --standard=PSR12 app tests
 
 deploy:
 	git push heroku main
@@ -27,6 +27,8 @@ setup:
 	docker-compose exec -T laravel.test php artisan migrate
 	npm install
 
+start:
+	docker-compose up -d
 
 test-coverage:
 	docker-compose exec -T laravel.test php artisan db:seed
