@@ -2,8 +2,7 @@
 
 namespace Database\Factories;
 
-use App\Models\TaskStatus;
-use App\Models\User;
+use App\Models\{TaskStatus, User};
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**

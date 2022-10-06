@@ -2,20 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreTaskRequest;
-use App\Http\Requests\UpdateTaskRequest;
-use App\Models\Label;
-use App\Models\Task;
-use App\Models\TaskStatus;
-use App\Models\User;
+use App\Http\Requests\{StoreTaskRequest, UpdateTaskRequest};
+use App\Models\{Label, Task, TaskStatus, User};
 use Illuminate\Contracts\View\View;
-use Illuminate\Http\Request;
-use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\{Request, RedirectResponse};
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\ValidationException;
-use Spatie\QueryBuilder\AllowedFilter;
-use Spatie\QueryBuilder\QueryBuilder;
+use Spatie\QueryBuilder\{AllowedFilter, QueryBuilder};
 
 class TaskController extends Controller
 {

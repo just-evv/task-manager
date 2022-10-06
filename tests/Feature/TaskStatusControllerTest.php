@@ -2,12 +2,7 @@
 
 namespace Tests\Feature;
 
-use App\Http\Controllers\Controller;
-use App\Models\Task;
-use App\Models\TaskStatus;
-use App\Models\User;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\DB;
+use App\Models\{Task, TaskStatus, User};
 use Tests\TestCase;
 
 /**

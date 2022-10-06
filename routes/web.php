@@ -1,10 +1,6 @@
 <?php
 
-use App\Http\Controllers\LabelController;
-use App\Http\Controllers\TaskController;
-use App\Http\Controllers\TaskStatusController;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\{LabelController, TaskController, TaskStatusController};
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -22,11 +18,11 @@ Route::get('/', function () {
     return view('index');
 })->name('index');
 
-Route::resource('task_statuses', TaskStatusController::class)->except(['show']);
-
-Route::resource('tasks', TaskController::class);
-
-Route::resource('labels', LabelController::class)->except(['show']);
+Route::resources([
+    'task_statuses' => TaskStatusController::class,
+    'tasks' => TaskController::class,
+    'labels' => LabelController::class
+]);
 
 Route::get('/dashboard', function () {
     return view('dashboard');

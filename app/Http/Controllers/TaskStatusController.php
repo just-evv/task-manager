@@ -2,15 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\{StoreTaskStatusRequest, UpdateTaskStatusRequest};
 use App\Models\TaskStatus;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Contracts\Foundation\Application;
-use Illuminate\Contracts\View\Factory;
-use Illuminate\Contracts\View\View;
+use Illuminate\Contracts\View\{Factory, View};
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
-use Illuminate\Validation\ValidationException;
 
 class TaskStatusController extends Controller
 {
@@ -44,16 +41,12 @@ class TaskStatusController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param Request $request
+     * @param StoreTaskStatusRequest $request
      * @return RedirectResponse
-     * @throws ValidationException
      */
-    public function store(Request $request): RedirectResponse
+    public function store(StoreTaskStatusRequest $request): RedirectResponse
     {
-        $messages = ['unique' => __('validation.status.unique')];
-        $data = $this->validate($request, [
-            'name' => 'required|unique:task_statuses'
-        ], $messages);
+        $data = $request->validated();
 
         $taskStatus = new TaskStatus();
         $taskStatus->fill($data);
@@ -77,17 +70,13 @@ class TaskStatusController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param Request $request
+     * @param UpdateTaskStatusRequest $request
      * @param TaskStatus $taskStatus
      * @return RedirectResponse
      */
-    public function update(Request $request, TaskStatus $taskStatus): RedirectResponse
+    public function update(UpdateTaskStatusRequest $request, TaskStatus $taskStatus): RedirectResponse
     {
-        $messages = ['unique' => __('validation.status.unique')];
-        $data = $this->validate($request, [
-            'name' => ['required', Rule::unique('task_statuses')->ignore($taskStatus)]
-        ], $messages);
-
+        $data = $request->validated();
         $taskStatus->fill($data);
         $taskStatus->save();
 

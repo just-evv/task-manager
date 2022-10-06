@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-    @include('flash::message')
+
     <h1 class="text-5xl font-semibold mb-5">{{__('content.label.labels')}}</h1>
     @can('create', App\Models\Label::class)
         <div class="'mr-auto">

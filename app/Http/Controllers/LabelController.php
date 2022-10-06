@@ -2,16 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\StoreLabelRequest;
-use App\Http\Requests\UpdateLabelRequest;
+use App\Http\Requests\{StoreLabelRequest, UpdateLabelRequest};
 use App\Models\Label;
-use Illuminate\Auth\Access\AuthorizationException;
-use Illuminate\Contracts\Foundation\Application;
-use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
-use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use Illuminate\Http\{RedirectResponse, Request};
 
 class LabelController extends Controller
 {

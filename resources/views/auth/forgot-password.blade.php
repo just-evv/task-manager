@@ -1,7 +1,7 @@
 <x-guest-layout>
     <x-auth-card>
         <x-slot name="logo">
-            <a href="/">
+            <a href="{{ route('index') }}">
                 <h2 class="text-3xl text-center">{{__('Task Manager')}}</h2>
             </a>
         </x-slot>

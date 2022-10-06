@@ -1,8 +1,8 @@
 <x-guest-layout>
     <x-auth-card>
         <x-slot name="logo">
-            <a href="/">
-                <x-application-logo class="w-20 h-20 fill-current text-gray-500" />
+            <a href="{{ route('index') }}">
+                <h2 class="text-3xl text-center">{{__('Task Manager')}}</h2>
             </a>
         </x-slot>
 
