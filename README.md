@@ -10,7 +10,7 @@ User can create a task and add info to it in gradually,such as task name, descri
 ### Installation
 
 - clone the repository
-- run `make setup`. The installation will be completed in docker-based environment
+- run `make setup`. The installation will be completed in docker-based environment.
 
 ### Starting the app
 
